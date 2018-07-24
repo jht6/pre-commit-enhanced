@@ -17,7 +17,13 @@ var fs = require('fs'),
 // to work correctly.
 //
 
+var realGitRootPath = null;
+
 var git = getGitFolderPath(root);
+
+if (git) {
+    realGitRootPath = path.resolve(git, '..');
+}
 
 // Function to recursively finding .git folder
 function getGitFolderPath(currentPath) {
@@ -96,7 +102,9 @@ try {
 // Create generic precommit hook that launches this modules hook (as well
 // as stashing - unstashing the unstaged changes)
 // TODO: we could keep launching the old pre-commit scripts
-var hookRelativeUnixPath = hook.replace(root, '.');
+
+// Maybe the "node_modules" directory isn't in the git root directory
+var hookRelativeUnixPath = hook.replace(realGitRootPath, '.');
 
 if (os.platform() === 'win32') {
     hookRelativeUnixPath = hookRelativeUnixPath.replace(/[\\\/]+/g, '/');
