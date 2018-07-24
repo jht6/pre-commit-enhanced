@@ -15,7 +15,10 @@ var spawn = require('cross-spawn'),
  * @api public
  */
 function Hook(fn, options) {
-    if (!this) return new Hook(fn, options);
+    if (!this) {
+        return new Hook(fn, options);
+    }
+
     options = options || {};
 
     this.options = options; // Used for testing only. Ignore this. Don't touch.
@@ -78,15 +81,20 @@ Hook.prototype.exec = function exec(bin, args) {
  */
 Hook.prototype.parse = function parse() {
     var pre = this.json['pre-commit'] || this.json.precommit,
-        config = !Array.isArray(pre) && 'object' === typeof pre ? pre : {};
+        config = !Array.isArray(pre) && typeof pre === 'object' ? pre : {};
 
     ['silent', 'colors', 'template'].forEach(function each(flag) {
         var value;
 
-        if (flag in config) value = config[flag];
-        else if ('precommit.' + flag in this.json) value = this.json['precommit.' + flag];
-        else if ('pre-commit.' + flag in this.json) value = this.json['pre-commit.' + flag];
-        else return;
+        if (flag in config) {
+            value = config[flag];
+        } else if ('precommit.' + flag in this.json) {
+            value = this.json['precommit.' + flag];
+        } else if ('pre-commit.' + flag in this.json) {
+            value = this.json['pre-commit.' + flag];
+        } else {
+            return;
+        }
 
         config[flag] = value;
     }, this);
@@ -96,7 +104,14 @@ Hook.prototype.parse = function parse() {
     //
     config.run = config.run || pre;
 
-    if ('string' === typeof config.run) config.run = config.run.split(/[, ]+/);
+    if (typeof config.run === 'string') {
+        config.run = config.run.split(/[, ]+/);
+    }
+
+    //
+    // If there is no scripts configured by "run" and
+    // "test" script is customized, set "run" to "test"
+    //
     if (!Array.isArray(config.run) &&
         this.json.scripts &&
         this.json.scripts.test &&
@@ -116,9 +131,12 @@ Hook.prototype.parse = function parse() {
  * @api public
  */
 Hook.prototype.log = function log(lines, exit) {
-    if (!Array.isArray(lines)) lines = lines.split('\n');
-    if ('number' !== typeof exit) exit = 1;
-
+    if (!Array.isArray(lines)) {
+        lines = lines.split('\n');
+    }
+    if (typeof exit !== 'number') {
+        exit = 1;
+    }
     var prefix = this.colors ?
         '\u001b[38;5;166mpre-commit:\u001b[39;49m ' :
         'pre-commit: ';
@@ -130,10 +148,15 @@ Hook.prototype.log = function log(lines, exit) {
         return prefix + line;
     });
 
-    if (!this.silent) lines.forEach(function output(line) {
-        if (exit) console.error(line);
-        else console.log(line);
-    });
+    if (!this.silent) {
+        lines.forEach(function output(line) {
+            if (exit === 0) {
+                console.log(line);
+            } else {
+                console.error(line);
+            }
+        });
+    }
 
     this.exit(exit, lines);
     return exit === 0;
@@ -168,18 +191,26 @@ Hook.prototype.initialize = function initialize() {
     //
     // Also bail out if we cannot find the git binary.
     //
-    if (!this.git) return this.log(this.format(Hook.log.binary, 'git'), 0);
+    if (!this.git) {
+        return this.log(this.format(Hook.log.binary, 'git'), 0);
+    }
 
     this.root = this.exec(this.git, ['rev-parse', '--show-toplevel']);
     this.status = this.exec(this.git, ['status', '--porcelain']);
 
-    if (this.status.code) return this.log(Hook.log.status, 0);
-    if (this.root.code) return this.log(Hook.log.root, 0);
+    if (this.status.code) {
+        return this.log(Hook.log.status, 0);
+    }
+    if (this.root.code) {
+        return this.log(Hook.log.root, 0);
+    }
 
     this.status = this.status.stdout.toString().trim();
     this.root = this.root.stdout.toString().trim();
 
     try {
+        // TODO: 此处代码认为package.json在git项目根目录下
+        // 需改进寻找package.json的方式
         this.json = require(path.join(this.root, 'package.json'));
         this.parse();
     } catch (e) {
@@ -203,7 +234,9 @@ Hook.prototype.initialize = function initialize() {
         this.exec(this.git, ['config', 'commit.template', this.config.template]);
     }
 
-    if (!this.config.run) return this.log(Hook.log.run, 0);
+    if (!this.config.run) {
+        return this.log(Hook.log.run, 0);
+    }
 };
 
 /**
@@ -215,7 +248,9 @@ Hook.prototype.run = function runner() {
     var hooked = this;
 
     (function again(scripts) {
-        if (!scripts.length) return hooked.exit(0);
+        if (scripts.length === 0) {
+            return hooked.exit(0);
+        }
 
         var script = scripts.shift();
 
@@ -232,7 +267,9 @@ Hook.prototype.run = function runner() {
             cwd: hooked.root,
             stdio: [0, 1, 2]
         }).once('close', function closed(code) {
-            if (code) return hooked.log(hooked.format(Hook.log.failure, script, code));
+            if (code) {
+                return hooked.log(hooked.format(Hook.log.failure, script, code));
+            }
 
             again(scripts);
         });
@@ -308,7 +345,9 @@ module.exports = Hook;
 //
 // Run directly if we're required executed directly through the CLI
 //
-if (module !== require.main) return;
+if (module !== require.main) {
+    return;
+}
 
 var hook = new Hook(function cli(code) {
     process.exit(code);
