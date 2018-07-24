@@ -1,7 +1,7 @@
 {
   "name": "pre-commit",
   "version": "1.2.2",
-  "description": "Automatically install pre-commit hooks for your npm modules.",
+  "description": "Based on pre-commit, with enhanced feature.",
   "main": "index.js",
   "scripts": {
     "coverage": "istanbul cover ./node_modules/.bin/_mocha -- test.js",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/observing/pre-commit.git"
+    "url": "git://github.com/Orange-J/pre-commit-enhanced.git"
   },
   "keywords": [
     "git",
@@ -26,8 +26,8 @@
     "test",
     "development"
   ],
-  "author": "Arnout Kazemier <opensource@observe.it>",
-  "homepage": "https://github.com/observing/pre-commit",
+  "author": "OrangeJ <juhaotian@foxmail.com>",
+  "homepage": "https://github.com/Orange-J/pre-commit-enhanced",
   "license": "MIT",
   "dependencies": {
     "cross-spawn": "^5.0.1",
@@ -38,6 +38,6 @@
     "assume": "~1.5.0",
     "istanbul": "0.4.x",
     "mocha": "~3.3.0",
-    "pre-commit": "git://github.com/observing/pre-commit.git"
+    "pre-commit": "git://github.com/Orange-J/pre-commit-enhanced.git"
   }
 }
