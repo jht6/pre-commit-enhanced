@@ -27,9 +27,14 @@ function Hook(fn, options) {
     this.npm = ''; // The location of the `npm` binary.
     this.git = ''; // The location of the `git` binary.
     this.root = ''; // The root location of the .git folder.
-    this.packageJsonDir = path.resolve(__dirname, '..', '..'), // The dir which contains "package.json"
     this.status = ''; // Contents of the `git status`.
     this.exit = fn; // Exit function.
+
+    // The dir which contains "package.json"
+    // Use my package.json when running unit test
+    this.packageJsonDir = this.options.useMyPackageJson ?
+        path.resolve(__dirname) :
+        path.resolve(__dirname, '..', '..');
 
     this.initialize();
 }
@@ -213,7 +218,9 @@ Hook.prototype.initialize = function initialize() {
         this.json = require(path.join(this.packageJsonDir, 'package.json'));
         this.parse();
     } catch (e) {
-        return this.log(this.format(Hook.log.json, e.message), 0);
+        if (!this.options.ignorestatus) {
+            return this.log(this.format(Hook.log.json, e.message), 0);
+        }
     }
 
     //
@@ -233,7 +240,7 @@ Hook.prototype.initialize = function initialize() {
         this.exec(this.git, ['config', 'commit.template', this.config.template]);
     }
 
-    if (!this.config.run) {
+    if (!this.config.run && !this.options.ignorestatus) {
         return this.log(Hook.log.run, 0);
     }
 };

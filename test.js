@@ -139,7 +139,8 @@ describe('pre-commit', function () {
                 assume(lines).has.length(3);
 
                 // color prefix check
-                // TODO: 需检查此处问题. 先注释掉, 避免单测报错
+                // TODO: 在git-bash中无法正确处理颜色控制符导致单测报错
+                // 暂时先注释掉这一条
                 // lines.forEach(function (line) {
                 //     assume(line).contains('\u001b');
                 // });
@@ -249,7 +250,8 @@ describe('pre-commit', function () {
 
                 next();
             }, {
-                ignorestatus: true
+                ignorestatus: true,
+                useMyPackageJson: true
             });
 
             hook.config.run = ['example-pass'];
@@ -266,7 +268,8 @@ describe('pre-commit', function () {
 
                 next();
             }, {
-                ignorestatus: true
+                ignorestatus: true,
+                useMyPackageJson: true
             });
 
             hook.config.run = ['example-fail'];
