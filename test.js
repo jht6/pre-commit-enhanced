@@ -51,6 +51,9 @@ describe('pre-commit', function () {
             assume(hook.silent).is.false();
 
             // TODO: 需检查此处问题. 先注释掉, 避免单测报错
+            // 报错原因: 在git-bash中, "tty.isatty(process.stdout.fd)"的
+            // 返回值为false导致报错. 在cmd中无此问题.
+            // 方案有待调整.
             // assume(hook.colors).is.true();
 
             hook.parse();
