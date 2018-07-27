@@ -46,6 +46,6 @@ if [[ $* == *--dry-run* ]]; then
     exit 1
   fi
 else
-  # TODO: 此处调用时路径有问题
+  cd $(dirname $(readlink -f "$0"))
   "$BINARY" "$("$BINARY" -e "console.log(require.resolve('pre-commit-enhanced'))")"
 fi
