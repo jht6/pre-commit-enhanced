@@ -1,5 +1,7 @@
 const LONG_TIMEOUT = 10000;
 
+// TODO: 修改代码导致单测不过, 后续调整测试案例
+
 /* istanbul ignore next */
 describe('pre-commit', function () {
     'use strict';
