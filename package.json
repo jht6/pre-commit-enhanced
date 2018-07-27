@@ -1,6 +1,6 @@
 {
   "name": "pre-commit-enhanced",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Based on pre-commit, with enhanced feature.",
   "main": "index.js",
   "scripts": {
