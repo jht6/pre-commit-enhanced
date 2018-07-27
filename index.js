@@ -70,11 +70,12 @@ Object.defineProperty(Hook.prototype, 'colors', {
  *
  * @param {String} bin Binary that needs to be executed
  * @param {Array} args Arguments for the binary
+ * @param {Object} opts Options for the binary
  * @returns {Object}
  * @api private
  */
-Hook.prototype.exec = function exec(bin, args) {
-    return spawn.sync(bin, args, {
+Hook.prototype.exec = function exec(bin, args, opts) {
+    return spawn.sync(bin, args, opts || {
         stdio: 'pipe'
     });
 };
@@ -175,6 +176,8 @@ Hook.prototype.log = function log(lines, exit) {
  * @api private
  */
 Hook.prototype.initialize = function initialize() {
+
+
     ['git', 'npm'].forEach(function each(binary) {
         try {
             this[binary] = which.sync(binary);
@@ -201,8 +204,21 @@ Hook.prototype.initialize = function initialize() {
         return this.log(this.format(Hook.log.binary, 'git'), 0);
     }
 
-    this.root = this.exec(this.git, ['rev-parse', '--show-toplevel']);
-    this.status = this.exec(this.git, ['status', '--porcelain']);
+    //
+    // Set current work directory to the root location of the .git folder,
+    // otherwise we can't get correct value when execute git command
+    // using "this.exec()". Sadly, I can't find the real reason yet.
+    //
+    const GIR_ROOT_DIR = path.resolve(process.argv[2]);
+
+    this.root = this.exec(this.git, ['rev-parse', '--show-toplevel'], {
+        stdio: 'pipe',
+        cwd: GIR_ROOT_DIR
+    });
+    this.status = this.exec(this.git, ['status', '--porcelain'], {
+        stdio: 'pipe',
+        cwd: GIR_ROOT_DIR
+    });
 
     if (this.status.code) {
         return this.log(Hook.log.status, 0);

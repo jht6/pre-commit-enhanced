@@ -23,6 +23,7 @@ NODEJS=`which nodejs 2> /dev/null`
 IOJS=`which iojs 2> /dev/null`
 LOCAL="/usr/local/bin/node"
 BINARY=
+GIT_ROOT_DIR=
 
 #
 # Figure out which binary we need to use for our script execution.
@@ -46,6 +47,7 @@ if [[ $* == *--dry-run* ]]; then
     exit 1
   fi
 else
+  GIT_ROOT_DIR=$(pwd)
   cd $(dirname $(readlink -f "$0"))
-  "$BINARY" "$("$BINARY" -e "console.log(require.resolve('pre-commit-enhanced'))")"
+  "$BINARY" "$("$BINARY" -e "console.log(require.resolve('pre-commit-enhanced'))")" "$GIT_ROOT_DIR"
 fi
