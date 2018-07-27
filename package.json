@@ -1,6 +1,6 @@
 {
   "name": "pre-commit",
-  "version": "1.2.2",
+  "version": "1.0.0",
   "description": "Based on pre-commit, with enhanced feature.",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,7 @@
     "hooks",
     "npm",
     "pre-commit",
+    "pre-commit-enhanced",
     "precommit",
     "run",
     "test",
@@ -38,6 +39,6 @@
     "assume": "~1.5.0",
     "istanbul": "0.4.x",
     "mocha": "~3.3.0",
-    "pre-commit": "git://github.com/Orange-J/pre-commit-enhanced.git"
+    "pre-commit-enhanced": "git://github.com/Orange-J/pre-commit-enhanced.git"
   }
 }
