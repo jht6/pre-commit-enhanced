@@ -1,5 +1,8 @@
 const LONG_TIMEOUT = 10000;
 
+let fs = require('fs'),
+    path = require('path');
+
 // TODO: 修改代码导致单测不过, 后续调整测试案例
 
 /* istanbul ignore next */
@@ -20,6 +23,62 @@ describe('pre-commit', function () {
 
         assume(hook).is.instanceOf(Hook);
         assume(hook.parse).is.a('function');
+    });
+
+    it('has package.json in the path of property "packageJsonDir"', function () {
+        let hook = Hook(() => {}, {
+            isTesting: true
+        });
+
+        let packageJsonDir = hook.packageJsonDir;
+        let hasPackageJson = fs.existsSync(
+            path.resolve(hook.packageJsonDir, 'package.json')
+        );
+    });
+
+    describe('#packageJsonDir', () => {
+        let hook;
+
+        beforeEach(() => {
+            hook = new Hook(() => {}, {
+                isTesting: true
+            });
+        });
+
+        it('"packageJsonDir" points to a folder', () => {
+            let stat = fs.lstatSync(hook.packageJsonDir);
+            assume(stat.isDirectory()).is.true();
+        });
+
+        it('has "package.json" in "packageJsonDir"', () => {
+            let hasPackageJson = fs.existsSync(
+                path.join(hook.packageJsonDir, 'package.json')
+            );
+            assume(hasPackageJson).is.true();
+        });
+    });
+
+    describe('#gitRootDir', () => {
+        let hook;
+
+        beforeEach(() => {
+            hook = new Hook(() => {}, {
+                isTesting: true
+            });
+        });
+
+        it('"gitRootDir" points to a folder', () => {
+            let stat = fs.lstatSync(hook.gitRootDir);
+            assume(stat.isDirectory()).is.true();
+        });
+
+        it('has ".git" folder in "gitRootDir"', () => {
+            let dotGitDirPath = path.join(hook.gitRootDir, '.git');
+            let hasDotGitDir = fs.existsSync(dotGitDirPath);
+            assume(hasDotGitDir).is.true();
+            let stat = fs.lstatSync(dotGitDirPath);
+            assume(stat.isDirectory()).is.true();
+        });
     });
 
     describe('#parse', function () {
