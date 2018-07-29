@@ -1,10 +1,12 @@
 'use strict';
 
-var spawn = require('cross-spawn'),
+let spawn = require('cross-spawn'),
     which = require('which'),
     path = require('path'),
     util = require('util'),
     tty = require('tty');
+
+const GIR_ROOT_DIR = path.resolve(process.argv[2]);
 
 /**
  * Representation of a hook runner.
@@ -205,12 +207,10 @@ Hook.prototype.initialize = function initialize() {
     }
 
     //
-    // Set current work directory to the root location of the .git folder,
-    // otherwise we can't get correct value when execute git command
-    // using "this.exec()". Sadly, I can't find the real reason yet.
+    // Set current work directory to the root location of the .git folder
+    // when execute git command using "this.exec()",
+    // otherwise we can't get correct value . Sadly, I can't find the real reason yet.
     //
-    const GIR_ROOT_DIR = path.resolve(process.argv[2]);
-
     this.root = this.exec(this.git, ['rev-parse', '--show-toplevel'], {
         stdio: 'pipe',
         cwd: GIR_ROOT_DIR
