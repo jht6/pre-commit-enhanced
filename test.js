@@ -15,7 +15,7 @@ describe('pre-commit', function () {
 
     it('can be initialized without a `new` keyword', function () {
         var hook = Hook(function () {}, {
-            ignorestatus: true
+            isTesting: true
         });
 
         assume(hook).is.instanceOf(Hook);
@@ -27,7 +27,7 @@ describe('pre-commit', function () {
 
         beforeEach(function () {
             hook = new Hook(function () {}, {
-                ignorestatus: true
+                isTesting: true
             });
         });
 
@@ -154,7 +154,7 @@ describe('pre-commit', function () {
 
                 next();
             }, {
-                ignorestatus: true
+                isTesting: true
             });
 
             hook.config.silent = true;
@@ -167,7 +167,7 @@ describe('pre-commit', function () {
 
                 next();
             }, {
-                ignorestatus: true
+                isTesting: true
             });
 
             hook.config.silent = true;
@@ -184,7 +184,7 @@ describe('pre-commit', function () {
 
                 next();
             }, {
-                ignorestatus: true
+                isTesting: true
             });
 
             hook.config.silent = true;
@@ -201,7 +201,7 @@ describe('pre-commit', function () {
 
                 next();
             }, {
-                ignorestatus: true
+                isTesting: true
             });
 
             hook.config.silent = true;
@@ -218,7 +218,7 @@ describe('pre-commit', function () {
                 console.error = err;
                 next();
             }, {
-                ignorestatus: true
+                isTesting: true
             });
 
             console.error = function (line) {
@@ -237,7 +237,7 @@ describe('pre-commit', function () {
                 console.log = log;
                 next();
             }, {
-                ignorestatus: true
+                isTesting: true
             });
 
             console.log = function (line) {
@@ -258,8 +258,7 @@ describe('pre-commit', function () {
 
                 next();
             }, {
-                ignorestatus: true,
-                useMyPackageJson: true
+                isTesting: true
             });
 
             hook.config.run = ['example-pass'];
@@ -277,8 +276,7 @@ describe('pre-commit', function () {
 
                 next();
             }, {
-                ignorestatus: true,
-                useMyPackageJson: true
+                isTesting: true
             });
 
             hook.config.run = ['example-fail'];

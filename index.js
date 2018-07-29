@@ -6,8 +6,6 @@ let spawn = require('cross-spawn'),
     util = require('util'),
     tty = require('tty');
 
-const GIR_ROOT_DIR = path.resolve(process.argv[2]);
-
 /**
  * Representation of a hook runner.
  *
@@ -23,7 +21,7 @@ function Hook(fn, options) {
 
     options = options || {};
 
-    this.options = options; // Used for testing only. Ignore this. Don't touch.
+    this._OPT_ = options; // Used for testing only. Ignore this. Don't touch.
     this.config = {}; // pre-commit configuration from the `package.json`.
     this.json = {}; // Actual content of the `package.json`.
     this.npm = ''; // The location of the `npm` binary.
@@ -34,9 +32,14 @@ function Hook(fn, options) {
 
     // The dir which contains "package.json"
     // Use my package.json when running unit test
-    this.packageJsonDir = this.options.useMyPackageJson ?
+    this.packageJsonDir = this._OPT_.isTesting ?
         path.resolve(__dirname) :
         path.resolve(__dirname, '..', '..');
+
+    // The dir which contains ".git" folder
+    this.gitRootDir = this._OPT_.isTesting ?
+        path.resolve(__dirname) :
+        path.resolve(process.argv[2]);
 
     this.initialize();
 }
@@ -178,8 +181,6 @@ Hook.prototype.log = function log(lines, exit) {
  * @api private
  */
 Hook.prototype.initialize = function initialize() {
-
-
     ['git', 'npm'].forEach(function each(binary) {
         try {
             this[binary] = which.sync(binary);
@@ -213,11 +214,11 @@ Hook.prototype.initialize = function initialize() {
     //
     this.root = this.exec(this.git, ['rev-parse', '--show-toplevel'], {
         stdio: 'pipe',
-        cwd: GIR_ROOT_DIR
+        cwd: this.gitRootDir
     });
     this.status = this.exec(this.git, ['status', '--porcelain'], {
         stdio: 'pipe',
-        cwd: GIR_ROOT_DIR
+        cwd: this.gitRootDir
     });
 
     if (this.status.code) {
@@ -234,7 +235,7 @@ Hook.prototype.initialize = function initialize() {
         this.json = require(path.join(this.packageJsonDir, 'package.json'));
         this.parse();
     } catch (e) {
-        if (!this.options.ignorestatus) {
+        if (!this._OPT_.isTesting) {
             return this.log(this.format(Hook.log.json, e.message), 0);
         }
     }
@@ -243,7 +244,7 @@ Hook.prototype.initialize = function initialize() {
     // We can only check for changes after we've parsed the package.json as it
     // contains information if we need to suppress the empty message or not.
     //
-    if (!this.status.length && !this.options.ignorestatus) {
+    if (!this.status.length && !this._OPT_.ignorestatus) {
         return this.log(Hook.log.empty, 0);
     }
 
@@ -256,7 +257,7 @@ Hook.prototype.initialize = function initialize() {
         this.exec(this.git, ['config', 'commit.template', this.config.template]);
     }
 
-    if (!this.config.run && !this.options.ignorestatus) {
+    if (!this.config.run && !this._OPT_.isTesting) {
         return this.log(Hook.log.run, 0);
     }
 };
