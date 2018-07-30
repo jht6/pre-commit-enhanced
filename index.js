@@ -1,5 +1,5 @@
 'use strict';
-
+// TODO: 定位目录时, 需考虑作为私有包时的情况
 let spawn = require('cross-spawn'),
     which = require('which'),
     path = require('path'),
