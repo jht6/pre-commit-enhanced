@@ -287,7 +287,7 @@ Hook.prototype.run = function runner() {
         //
         spawn(hooked.npm, ['run', script, '--silent'], {
             env: process.env,
-            cwd: hooked.gitRootDir,
+            cwd: hooked.packageJsonDir,
             stdio: [0, 1, 2]
         }).once('close', function closed(code) {
             if (code) {
