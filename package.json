@@ -40,5 +40,8 @@
     "istanbul": "0.4.x",
     "mocha": "~3.3.0",
     "pre-commit-enhanced": "git://github.com/Orange-J/pre-commit-enhanced.git"
+  },
+  "engines": {
+    "node": ">=6.10.0"
   }
 }
