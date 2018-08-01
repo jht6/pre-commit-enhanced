@@ -92,11 +92,11 @@ Hook.prototype.exec = function exec(bin, args, opts) {
  * @api private
  */
 Hook.prototype.parse = function parse() {
-    var pre = this.json['pre-commit'] || this.json.precommit,
+    let pre = this.json['pre-commit'] || this.json.precommit,
         config = !Array.isArray(pre) && typeof pre === 'object' ? pre : {};
 
     ['silent', 'colors', 'template'].forEach(function each(flag) {
-        var value;
+        let value;
 
         if (flag in config) {
             value = config[flag];
@@ -149,7 +149,7 @@ Hook.prototype.log = function log(lines, exit) {
     if (typeof exit !== 'number') {
         exit = 1;
     }
-    var prefix = this.colors ?
+    let prefix = this.colors ?
         '\u001b[38;5;166mpre-commit:\u001b[39;49m ' :
         'pre-commit: ';
 
@@ -268,14 +268,14 @@ Hook.prototype.initialize = function initialize() {
  * @api public
  */
 Hook.prototype.run = function runner() {
-    var hooked = this;
+    let hooked = this;
 
     (function again(scripts) {
         if (scripts.length === 0) {
             return hooked.exit(0);
         }
 
-        var script = scripts.shift();
+        let script = scripts.shift();
 
         //
         // There's a reason on why we're using an async `spawn` here instead of the
@@ -372,7 +372,7 @@ if (module !== require.main) {
     return;
 }
 
-var hook = new Hook(function cli(code) {
+const hook = new Hook(function cli(code) {
     process.exit(code);
 });
 

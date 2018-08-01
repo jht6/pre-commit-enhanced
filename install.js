@@ -3,7 +3,7 @@
 //
 // Compatibility with older node.js as path.exists got moved to `fs`.
 //
-var fs = require('fs'),
+let fs = require('fs'),
     path = require('path'),
     os = require('os'),
     hook = path.join(__dirname, 'hook'),
@@ -17,9 +17,9 @@ var fs = require('fs'),
 // to work correctly.
 //
 
-var realGitRootPath = null;
+let realGitRootPath = null;
 
-var git = getGitFolderPath(root);
+let git = getGitFolderPath(root);
 
 if (git) {
     realGitRootPath = path.resolve(git, '..');
@@ -27,13 +27,13 @@ if (git) {
 
 // Function to recursively finding .git folder
 function getGitFolderPath(currentPath) {
-    var git = path.resolve(currentPath, '.git')
+    let git = path.resolve(currentPath, '.git')
 
     if (!exists(git) || !fs.lstatSync(git).isDirectory()) {
         console.log('pre-commit:');
         console.log('pre-commit: Not found .git folder in', git);
 
-        var newPath = path.resolve(currentPath, '..');
+        let newPath = path.resolve(currentPath, '..');
 
         // Stop if we on top folder
         if (currentPath === newPath) {
@@ -52,7 +52,7 @@ function getGitFolderPath(currentPath) {
 // Resolve git directory for submodules
 //
 if (exists(git) && fs.lstatSync(git).isFile()) {
-    var gitinfo = fs.readFileSync(git).toString(),
+    let gitinfo = fs.readFileSync(git).toString(),
         gitdirmatch = /gitdir: (.+)/.exec(gitinfo),
         gitdir = gitdirmatch.length == 2 ? gitdirmatch[1] : null;
 
@@ -73,10 +73,12 @@ if (!git) {
     return;
 }
 
-var hooks = path.resolve(git, 'hooks'),
+let hooks = path.resolve(git, 'hooks'),
     precommit = path.resolve(hooks, 'pre-commit');
 
-if (!exists(hooks)) fs.mkdirSync(hooks);
+if (!exists(hooks)) {
+    fs.mkdirSync(hooks);
+}
 
 //
 // If there's an existing `pre-commit` hook we want to back it up instead of
@@ -104,13 +106,13 @@ try {
 // TODO: we could keep launching the old pre-commit scripts
 
 // Maybe the "node_modules" directory isn't in the git root directory
-var hookRelativeUnixPath = hook.replace(realGitRootPath, '.');
+let hookRelativeUnixPath = hook.replace(realGitRootPath, '.');
 
 if (os.platform() === 'win32') {
     hookRelativeUnixPath = hookRelativeUnixPath.replace(/[\\\/]+/g, '/');
 }
 
-var precommitContent = '#!/usr/bin/env bash' + os.EOL +
+let precommitContent = '#!/usr/bin/env bash' + os.EOL +
     hookRelativeUnixPath + os.EOL +
     'RESULT=$?' + os.EOL +
     '[ $RESULT -ne 0 ] && exit 1' + os.EOL +
