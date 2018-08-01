@@ -1,39 +1,25 @@
 const LONG_TIMEOUT = 10000;
 
-let fs = require('fs'),
-    path = require('path');
-
-// TODO: 修改代码导致单测不过, 后续调整测试案例
+const fs = require('fs');
+const path = require('path');
+const assume = require('assume');
+const Hook = require('./index');
 
 /* istanbul ignore next */
-describe('pre-commit', function () {
+describe('pre-commit', () => {
     'use strict';
 
-    var assume = require('assume'),
-        Hook = require('./');
-
-    it('is exported as a function', function () {
+    it('is exported as a function', () => {
         assume(Hook).is.a('function');
     });
 
-    it('can be initialized without a `new` keyword', function () {
-        var hook = Hook(function () {}, {
+    it('can be initialized without a `new` keyword', () => {
+        let hook = Hook(() => {}, {
             isTesting: true
         });
 
         assume(hook).is.instanceOf(Hook);
         assume(hook.parse).is.a('function');
-    });
-
-    it('has package.json in the path of property "packageJsonDir"', function () {
-        let hook = Hook(() => {}, {
-            isTesting: true
-        });
-
-        let packageJsonDir = hook.packageJsonDir;
-        let hasPackageJson = fs.existsSync(
-            path.resolve(hook.packageJsonDir, 'package.json')
-        );
     });
 
     describe('#packageJsonDir', () => {
@@ -81,16 +67,16 @@ describe('pre-commit', function () {
         });
     });
 
-    describe('#parse', function () {
-        var hook;
+    describe('#parse', () => {
+        let hook;
 
-        beforeEach(function () {
-            hook = new Hook(function () {}, {
+        beforeEach(() => {
+            hook = new Hook(() => {}, {
                 isTesting: true
             });
         });
 
-        it('extracts configuration values from precommit.<flag>', function () {
+        it('extracts configuration values from precommit.<flag>', () => {
             hook.json = {
                 'precommit.silent': true
             };
@@ -103,7 +89,7 @@ describe('pre-commit', function () {
             assume(hook.silent).is.true();
         });
 
-        it('extracts configuration values from pre-commit.<flag>', function () {
+        it('extracts configuration values from pre-commit.<flag>', () => {
             hook.json = {
                 'pre-commit.silent': true,
                 'pre-commit.colors': false
@@ -124,7 +110,7 @@ describe('pre-commit', function () {
             assume(hook.colors).is.false();
         });
 
-        it('normalizes the `pre-commit` to an array', function () {
+        it('normalizes the `pre-commit` to an array', () => {
             hook.json = {
                 'pre-commit': 'test, cows, moo'
             };
@@ -137,7 +123,7 @@ describe('pre-commit', function () {
             assume(hook.config.run).contains('moo');
         });
 
-        it('normalizes the `precommit` to an array', function () {
+        it('normalizes the `precommit` to an array', () => {
             hook.json = {
                 'precommit': 'test, cows, moo'
             };
@@ -150,7 +136,7 @@ describe('pre-commit', function () {
             assume(hook.config.run).contains('moo');
         });
 
-        it('allows `pre-commit` object based syntax', function () {
+        it('allows `pre-commit` object based syntax', () => {
             hook.json = {
                 'pre-commit': {
                     run: 'test scripts go here',
@@ -170,7 +156,7 @@ describe('pre-commit', function () {
             assume(hook.colors).is.false();
         });
 
-        it('defaults to `test` if nothing is specified', function () {
+        it('defaults to `test` if nothing is specified', () => {
             hook.json = {
                 scripts: {
                     test: 'mocha test.js'
@@ -181,7 +167,7 @@ describe('pre-commit', function () {
             assume(hook.config.run).deep.equals(['test']);
         });
 
-        it('ignores the default npm.script.test placeholder', function () {
+        it('ignores the default npm.script.test placeholder', () => {
             hook.json = {
                 scripts: {
                     test: 'echo "Error: no test specified" && exit 1'
@@ -193,9 +179,9 @@ describe('pre-commit', function () {
         });
     });
 
-    describe('#log', function () {
-        it('prefixes the logs with `pre-commit`', function (next) {
-            var hook = new Hook(function (code, lines) {
+    describe('#log', () => {
+        it('prefixes the logs with `pre-commit`', (next) => {
+            let hook = new Hook((code, lines) => {
                 assume(code).equals(1);
                 assume(lines).is.a('array');
 
@@ -220,8 +206,8 @@ describe('pre-commit', function () {
             hook.log(['foo']);
         });
 
-        it('allows for a custom error code', function (next) {
-            var hook = new Hook(function (code, lines) {
+        it('allows for a custom error code', (next) => {
+            let hook = new Hook((code, lines) => {
                 assume(code).equals(0);
 
                 next();
@@ -233,8 +219,8 @@ describe('pre-commit', function () {
             hook.log(['foo'], 0);
         });
 
-        it('allows strings to be split \\n', function (next) {
-            var hook = new Hook(function (code, lines) {
+        it('allows strings to be split \\n', (next) => {
+            let hook = new Hook((code, lines) => {
                 assume(code).equals(0);
 
                 assume(lines).has.length(4);
@@ -250,11 +236,11 @@ describe('pre-commit', function () {
             hook.log('foo\nbar', 0);
         });
 
-        it('does not output colors when configured to do so', function (next) {
-            var hook = new Hook(function (code, lines) {
+        it('does not output colors when configured to do so', (next) => {
+            let hook = new Hook((code, lines) => {
                 assume(code).equals(0);
 
-                lines.forEach(function (line) {
+                lines.forEach((line) => {
                     assume(line).does.not.contain('\u001b');
                 });
 
@@ -269,18 +255,18 @@ describe('pre-commit', function () {
             hook.log('foo\nbar', 0);
         });
 
-        it('output lines to stderr if error code 1', function (next) {
-            var err = console.error;
+        it('output lines to stderr if error code 1', (next) => {
+            let err = console.error;
             next = assume.plan(4, next);
 
-            var hook = new Hook(function (code, lines) {
+            let hook = new Hook((code, lines) => {
                 console.error = err;
                 next();
             }, {
                 isTesting: true
             });
 
-            console.error = function (line) {
+            console.error = (line) => {
                 assume(line).contains('pre-commit: ');
             };
 
@@ -288,18 +274,18 @@ describe('pre-commit', function () {
             hook.log('foo\nbar', 1);
         });
 
-        it('output lines to stdout if error code 0', function (next) {
-            var log = console.log;
+        it('output lines to stdout if error code 0', (next) => {
+            let log = console.log;
             next = assume.plan(4, next);
 
-            var hook = new Hook(function (code, lines) {
+            let hook = new Hook((code, lines) => {
                 console.log = log;
                 next();
             }, {
                 isTesting: true
             });
 
-            console.log = function (line) {
+            console.log = (line) => {
                 assume(line).contains('pre-commit: ');
             };
 
@@ -308,10 +294,10 @@ describe('pre-commit', function () {
         });
     });
 
-    describe('#run', function () {
+    describe('#run', () => {
         it('runs the specified scripts and exit with 0 on no error', function (next) {
             this.timeout(LONG_TIMEOUT);
-            var hook = new Hook(function (code, lines) {
+            let hook = new Hook((code, lines) => {
                 assume(code).equals(0);
                 assume(lines).is.undefined();
 
@@ -326,7 +312,7 @@ describe('pre-commit', function () {
 
         it('runs the specified test and exits with 1 on error', function (next) {
             this.timeout(LONG_TIMEOUT);
-            var hook = new Hook(function (code, lines) {
+            let hook = new Hook((code, lines) => {
                 assume(code).equals(1);
 
                 assume(lines).is.a('array');
