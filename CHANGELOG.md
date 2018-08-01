@@ -1,3 +1,11 @@
+
+## 1.0.5
+- Autosearch the root directory of git project.
+- Autosearch the directory containing "package.json" file(packageJsonDir) as the root directory of front-end code.
+- Ensure using packageJsonDir as current working directory when execute "npm run xx" in index.js.
+
+## -------- The following logs are from "pre-commit" --------
+
 ## 1.0.2
 - Check `/usr/local/bin/node` if we cannot find the binaries in the PATH.
 
