@@ -4,7 +4,8 @@ let spawn = require('cross-spawn'),
     which = require('which'),
     path = require('path'),
     util = require('util'),
-    tty = require('tty');
+    tty = require('tty'),
+    utils = require('./utils');
 
 /**
  * Representation of a hook runner.
@@ -34,7 +35,7 @@ function Hook(fn, options) {
     // Use my package.json when running unit test
     this.packageJsonDir = this._OPT_.isTesting ?
         path.resolve(__dirname) :
-        path.resolve(__dirname, '..', '..');
+        utils.getPackageJsonDirPath();
 
     // The dir which contains ".git" folder
     this.gitRootDir = this._OPT_.isTesting ?

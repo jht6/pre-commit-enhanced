@@ -8,7 +8,8 @@ let fs = require('fs'),
     os = require('os'),
     hook = path.join(__dirname, 'hook'),
     root = path.resolve(__dirname, '..', '..'),
-    exists = fs.existsSync || path.existsSync;
+    exists = fs.existsSync || path.existsSync,
+    utils = require('./utils');;
 
 //
 // Gather the location of the possible hidden .git directory, the hooks
@@ -141,3 +142,40 @@ try {
     console.error('pre-commit: ' + e.message);
     console.error('pre-commit:');
 }
+
+//
+// add "install-pce-foreach" in "scripts" of package.json
+//
+let packageJsonPath = path.join(utils.getPackageJsonDirPath(), 'package.json');
+if (!exists(packageJsonPath)) {
+    console.error('pre-commit:');
+    console.error('pre-commit: There is no "package.json" file in path' + packageJsonPath);
+    console.error('pre-commit:');
+    return;
+}
+
+let json = require(packageJsonPath);
+if (!json) {
+    json = {};
+}
+if (!json.scripts) {
+    json.scripts = {};
+}
+
+json.scripts['pce-install-foreach'] = [
+    'node ',
+    './node_modules/pre-commit-enhanced/scripts/install-foreach.js'
+].join('');
+
+const spaceCount = 2;
+try {
+    fs.writeFileSync(packageJsonPath, JSON.stringify(json, null, spaceCount));
+    console.error('pre-commit:');
+    console.error('pre-commit: Success: Add "pce-install-foreach" scripts in package.json at ' + packageJsonPath);
+    console.error('pre-commit:');
+} catch (e) {
+    console.error('pre-commit:');
+    console.error('pre-commit: Fail: Add "pce-install-foreach" scripts in package.json at ' + packageJsonPath);
+    console.error('pre-commit:');
+}
+
