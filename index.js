@@ -5,7 +5,7 @@ let spawn = require('cross-spawn'),
     path = require('path'),
     util = require('util'),
     tty = require('tty'),
-    utils = require('./utils');
+    utils = require('./common/utils');
 
 /**
  * Representation of a hook runner.

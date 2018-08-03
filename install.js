@@ -9,7 +9,7 @@ const os = require('os');
 const hook = path.join(__dirname, 'hook');
 const root = path.resolve(__dirname, '..', '..');
 const exists = fs.existsSync || path.existsSync;
-const utils = require('./utils');
+const utils = require('./common/utils');
 
 //
 // Gather the location of the possible hidden .git directory, the hooks

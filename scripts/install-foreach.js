@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const exists = fs.existsSync || path.existsSync;
-const utils = require('../utils');
+const utils = require('../common/utils');
 const SCRIPT_PCE_FOREACH = 'pce-foreach';
 
 let packageJsonPath = path.join(utils.getPackageJsonDirPath(), 'package.json');
