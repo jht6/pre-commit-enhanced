@@ -5,6 +5,7 @@ const path = require('path');
 const exists = fs.existsSync || path.existsSync;
 const utils = require('../common/utils');
 const SCRIPT_PCE_FOREACH = 'pce-foreach';
+const { FOREACH_COMMAND_TPL } = require('../common/const')();
 
 let packageJsonPath = path.join(utils.getPackageJsonDirPath(), 'package.json');
 if (!exists(packageJsonPath)) {
@@ -65,8 +66,8 @@ if (!preCommit) { // no "pre-commit" or "precommit" config now
 //
 // add "pce-foreach-command" property in package.json
 //
-const PCE_FOREACH_COMMAND = 'pce-foreach-command';
-json[PCE_FOREACH_COMMAND] = 'command <filepath>';
+const FOREACH_COMMAND_KEY = 'pce-foreach-command';
+json[FOREACH_COMMAND_KEY] = FOREACH_COMMAND_TPL;
 
 
 const spaceCount = 2;
@@ -75,7 +76,7 @@ try {
     console.error('pre-commit:');
     console.error(`pre-commit: Success: Add "${SCRIPT_PCE_FOREACH}" in "scripts" of package.json`);
     console.error(`pre-commit: Success: Add "${SCRIPT_PCE_FOREACH}" in "${preCommitKey}" of package.json`);
-    console.error(`pre-commit: Success: Add "${PCE_FOREACH_COMMAND}" in package.json`);
+    console.error(`pre-commit: Success: Add "${FOREACH_COMMAND_KEY}" in package.json`);
     console.error(`pre-commit:            at ${packageJsonPath}`);
     console.error('pre-commit:');
 } catch (e) {
