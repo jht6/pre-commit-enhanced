@@ -3,13 +3,13 @@
 //
 // Compatibility with older node.js as path.exists got moved to `fs`.
 //
-let fs = require('fs'),
-    path = require('path'),
-    os = require('os'),
-    hook = path.join(__dirname, 'hook'),
-    root = path.resolve(__dirname, '..', '..'),
-    exists = fs.existsSync || path.existsSync,
-    utils = require('./utils');;
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+const hook = path.join(__dirname, 'hook');
+const root = path.resolve(__dirname, '..', '..');
+const exists = fs.existsSync || path.existsSync;
+const utils = require('./utils');
 
 //
 // Gather the location of the possible hidden .git directory, the hooks
@@ -178,4 +178,3 @@ try {
     console.error('pre-commit: Fail: Add "pce-install-foreach" scripts in package.json at ' + packageJsonPath);
     console.error('pre-commit:');
 }
-
