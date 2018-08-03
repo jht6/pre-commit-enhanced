@@ -1,11 +1,11 @@
 'use strict';
 
-let spawn = require('cross-spawn'),
-    which = require('which'),
-    path = require('path'),
-    util = require('util'),
-    tty = require('tty'),
-    utils = require('./common/utils');
+const spawn = require('cross-spawn');
+const which = require('which');
+const path = require('path');
+const util = require('util');
+const tty = require('tty');
+const utils = require('./common/utils');
 
 /**
  * Representation of a hook runner.

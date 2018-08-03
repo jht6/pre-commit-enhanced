@@ -1,16 +1,17 @@
 'use strict';
 
-var fs = require('fs'),
-    path = require('path'),
-    exists = fs.existsSync || path.existsSync,
-    root = path.resolve(__dirname, '..', '..'),
-    git = path.resolve(root, '.git');
+const fs = require('fs');
+const path = require('path');
+const exists = fs.existsSync || path.existsSync;
+
+let root = path.resolve(__dirname, '..', '..');
+let git = path.resolve(root, '.git');
 
 //
 // Resolve git directory for submodules
 //
 if (exists(git) && fs.lstatSync(git).isFile()) {
-    var gitinfo = fs.readFileSync(git).toString(),
+    let gitinfo = fs.readFileSync(git).toString(),
         gitdirmatch = /gitdir: (.+)/.exec(gitinfo),
         gitdir = gitdirmatch.length == 2 ? gitdirmatch[1] : null;
 
@@ -22,7 +23,7 @@ if (exists(git) && fs.lstatSync(git).isFile()) {
 //
 // Location of pre-commit hook, if it exists
 //
-var precommit = path.resolve(git, 'hooks', 'pre-commit');
+let precommit = path.resolve(git, 'hooks', 'pre-commit');
 
 //
 // Bail out if we don't have pre-commit file, it might be removed manually.
