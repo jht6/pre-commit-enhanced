@@ -106,6 +106,11 @@ ForeachInstaller.prototype.writeJsonToFile = function (json) {
     }
 };
 
-let installer = new ForeachInstaller();
+// Expose the Hook instance so we can use it for testing purposes.
+module.exports = Hook;
 
-installer.run();
+// Run only if this script is executed through CLI
+if (require.main === module) {
+    const installer = new ForeachInstaller();
+    installer.run();
+}
