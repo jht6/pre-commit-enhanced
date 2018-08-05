@@ -78,16 +78,24 @@ ForeachInstaller.prototype.addForeachInPrecommit = function (json) {
 
     if (!preCommit) { // no "pre-commit" or "precommit" config now
         json[preCommitKey] = [SCRIPT_PCE_FOREACH];
-    } else if (typeof preCommit === 'object') {
+    } else if (Object.prototype.toString.call(preCommit) === '[object Object]') {
         if (Array.isArray(json[preCommitKey].run)) { // for format of {run: ["a", "b", "c"]}
             json[preCommitKey].run.push(SCRIPT_PCE_FOREACH);
         } else if (typeof json[preCommitKey].run === 'string') { // for format of {run: "a, b, c"}
-            json[preCommitKey].run = preCommit.split(/[, ]+/).push(SCRIPT_PCE_FOREACH).join(', ');
+            json[preCommitKey].run = preCommit.run
+                .split(/[, ]+/)
+                .filter(cmd => !!cmd)
+                .concat(SCRIPT_PCE_FOREACH)
+                .join(', ');
         } else {
             json[preCommitKey].run = [SCRIPT_PCE_FOREACH];
         }
     } else if (typeof preCommit === 'string') { // for format of "a, b, c"
-        json[preCommitKey] = preCommit.split(/[, ]+/).push(SCRIPT_PCE_FOREACH).join(', ');
+        json[preCommitKey] = preCommit
+            .split(/[, ]+/)
+            .filter(cmd => !!cmd)
+            .concat(SCRIPT_PCE_FOREACH)
+            .join(', ');
     } else if (Array.isArray(preCommit)) { // for format of ["a, b, c"]
         json[preCommitKey].push(SCRIPT_PCE_FOREACH);
     }
@@ -120,7 +128,7 @@ ForeachInstaller.prototype.writeJsonToFile = function (json) {
 };
 
 // Expose the Hook instance so we can use it for testing purposes.
-module.exports = Hook;
+module.exports = ForeachInstaller;
 
 // Run only if this script is executed through CLI
 if (require.main === module) {
