@@ -13,29 +13,44 @@ function ForeachInstaller() {
         return new ForeachInstaller();
     }
 
+    this.packageJsonPath = '';
+    this.json = null;
+}
+
+ForeachInstaller.prototype.run = function () {
+    this.init();
+    this.json = this.addForeachInScripts(this.json);
+    this.json = this.addForeachInPrecommit(this.json);
+    this.json = this.addForeachCommand(this.json);
+    this.json = this.addForeachCommand(this.json);
+    this.writeJsonToFile(this.json);
+};
+
+ForeachInstaller.prototype.init = function () {
     this.packageJsonPath = path.join(
         utils.getPackageJsonDirPath(),
         'package.json'
     );
     if (!exists(this.packageJsonPath)) {
-        utils.log(`There is no "package.json" file in path: ${this.packageJsonPath}`);
+        utils.log(`There is no "package.json" file in path: ${this.packageJsonPath}`, 1);
     }
 
-    this.json = require(this.packageJsonPath);
+    try {
+        this.json = require(this.packageJsonPath);
+    } catch (e) {
+        utils.log([
+            `Fail: Require json from package.json at ${this.packageJsonPath}`,
+            `Error message is:`
+        ]);
+        console.log(e);
+    }
+
     if (!this.json) {
         this.json = {};
     }
     if (!this.json.scripts) {
         this.json.scripts = {};
     }
-}
-
-ForeachInstaller.prototype.run = function () {
-    this.json = this.addForeachInScripts(this.json);
-    this.json = this.addForeachInPrecommit(this.json);
-    this.json = this.addForeachCommand(this.json);
-    this.json = this.addForeachCommand(this.json);
-    this.writeJsonToFile(this.json);
 };
 
 ForeachInstaller.prototype.addForeachInScripts = function (json) {
@@ -81,9 +96,7 @@ ForeachInstaller.prototype.addForeachInPrecommit = function (json) {
 };
 
 ForeachInstaller.prototype.addForeachCommand = function (json) {
-
     json[FOREACH_COMMAND_KEY] = FOREACH_COMMAND_TPL;
-
     return json;
 };
 
