@@ -10,7 +10,8 @@
     "install": "node install.js",
     "test": "mocha --recursive",
     "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- test.js",
-    "uninstall": "node uninstall.js"
+    "uninstall": "node uninstall.js",
+    "pce-install-foreach": "node ./node_modules/pre-commit-enhanced/scripts/install-foreach.js"
   },
   "repository": {
     "type": "git",
