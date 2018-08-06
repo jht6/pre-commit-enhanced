@@ -4,14 +4,14 @@ const assume = require('assume');
 const Hook = require('../index');
 
 /* istanbul ignore next */
-describe('pre-commit', () => {
+describe('pre-commit', function () {
     'use strict';
 
-    it('is exported as a function', () => {
+    it('is exported as a function', function () {
         assume(Hook).is.a('function');
     });
 
-    it('can be initialized without a `new` keyword', () => {
+    it('can be initialized without a `new` keyword', function () {
         let hook = Hook(() => {}, {
             isTesting: true
         });
@@ -20,21 +20,21 @@ describe('pre-commit', () => {
         assume(hook.parse).is.a('function');
     });
 
-    describe('#packageJsonDir', () => {
+    describe('#packageJsonDir', function () {
         let hook;
 
-        beforeEach(() => {
+        beforeEach(function () {
             hook = new Hook(() => {}, {
                 isTesting: true
             });
         });
 
-        it('"packageJsonDir" points to a folder', () => {
+        it('"packageJsonDir" points to a folder', function () {
             let stat = fs.lstatSync(hook.packageJsonDir);
             assume(stat.isDirectory()).is.true();
         });
 
-        it('has "package.json" in "packageJsonDir"', () => {
+        it('has "package.json" in "packageJsonDir"', function () {
             let hasPackageJson = fs.existsSync(
                 path.join(hook.packageJsonDir, 'package.json')
             );
@@ -42,21 +42,21 @@ describe('pre-commit', () => {
         });
     });
 
-    describe('#gitRootDir', () => {
+    describe('#gitRootDir', function () {
         let hook;
 
-        beforeEach(() => {
+        beforeEach(function () {
             hook = new Hook(() => {}, {
                 isTesting: true
             });
         });
 
-        it('"gitRootDir" points to a folder', () => {
+        it('"gitRootDir" points to a folder', function () {
             let stat = fs.lstatSync(hook.gitRootDir);
             assume(stat.isDirectory()).is.true();
         });
 
-        it('has ".git" folder in "gitRootDir"', () => {
+        it('has ".git" folder in "gitRootDir"', function () {
             let dotGitDirPath = path.join(hook.gitRootDir, '.git');
             let hasDotGitDir = fs.existsSync(dotGitDirPath);
             assume(hasDotGitDir).is.true();
@@ -65,7 +65,7 @@ describe('pre-commit', () => {
         });
     });
 
-    describe('#parse', () => {
+    describe('#parse', function () {
         let hook;
 
         beforeEach(() => {
@@ -74,7 +74,7 @@ describe('pre-commit', () => {
             });
         });
 
-        it('extracts configuration values from precommit.<flag>', () => {
+        it('extracts configuration values from precommit.<flag>', function () {
             hook.json = {
                 'precommit.silent': true
             };
@@ -87,7 +87,7 @@ describe('pre-commit', () => {
             assume(hook.silent).is.true();
         });
 
-        it('extracts configuration values from pre-commit.<flag>', () => {
+        it('extracts configuration values from pre-commit.<flag>', function () {
             hook.json = {
                 'pre-commit.silent': true,
                 'pre-commit.colors': false
@@ -108,7 +108,7 @@ describe('pre-commit', () => {
             assume(hook.colors).is.false();
         });
 
-        it('normalizes the `pre-commit` to an array', () => {
+        it('normalizes the `pre-commit` to an array', function () {
             hook.json = {
                 'pre-commit': 'test, cows, moo'
             };
@@ -121,7 +121,7 @@ describe('pre-commit', () => {
             assume(hook.config.run).contains('moo');
         });
 
-        it('normalizes the `precommit` to an array', () => {
+        it('normalizes the `precommit` to an array', function () {
             hook.json = {
                 'precommit': 'test, cows, moo'
             };
@@ -134,7 +134,7 @@ describe('pre-commit', () => {
             assume(hook.config.run).contains('moo');
         });
 
-        it('allows `pre-commit` object based syntax', () => {
+        it('allows `pre-commit` object based syntax', function () {
             hook.json = {
                 'pre-commit': {
                     run: 'test scripts go here',
@@ -154,7 +154,7 @@ describe('pre-commit', () => {
             assume(hook.colors).is.false();
         });
 
-        it('defaults to `test` if nothing is specified', () => {
+        it('defaults to `test` if nothing is specified', function () {
             hook.json = {
                 scripts: {
                     test: 'mocha test.js'
@@ -165,7 +165,7 @@ describe('pre-commit', () => {
             assume(hook.config.run).deep.equals(['test']);
         });
 
-        it('ignores the default npm.script.test placeholder', () => {
+        it('ignores the default npm.script.test placeholder', function () {
             hook.json = {
                 scripts: {
                     test: 'echo "Error: no test specified" && exit 1'
@@ -178,7 +178,7 @@ describe('pre-commit', () => {
     });
 
     describe('#log', () => {
-        it('prefixes the logs with `pre-commit`', (next) => {
+        it('prefixes the logs with `pre-commit`', function (next) {
             let hook = new Hook((code, lines) => {
                 assume(code).equals(1);
                 assume(lines).is.a('array');
@@ -204,7 +204,7 @@ describe('pre-commit', () => {
             hook.log(['foo']);
         });
 
-        it('allows for a custom error code', (next) => {
+        it('allows for a custom error code', function (next) {
             let hook = new Hook((code, lines) => {
                 assume(code).equals(0);
 
@@ -217,7 +217,7 @@ describe('pre-commit', () => {
             hook.log(['foo'], 0);
         });
 
-        it('allows strings to be split \\n', (next) => {
+        it('allows strings to be split \\n', function (next) {
             let hook = new Hook((code, lines) => {
                 assume(code).equals(0);
 
@@ -234,7 +234,7 @@ describe('pre-commit', () => {
             hook.log('foo\nbar', 0);
         });
 
-        it('does not output colors when configured to do so', (next) => {
+        it('does not output colors when configured to do so', function (next) {
             let hook = new Hook((code, lines) => {
                 assume(code).equals(0);
 
@@ -253,7 +253,7 @@ describe('pre-commit', () => {
             hook.log('foo\nbar', 0);
         });
 
-        it('output lines to stderr if error code 1', (next) => {
+        it('output lines to stderr if error code 1', function (next) {
             let err = console.error;
             next = assume.plan(4, next);
 
@@ -272,7 +272,7 @@ describe('pre-commit', () => {
             hook.log('foo\nbar', 1);
         });
 
-        it('output lines to stdout if error code 0', (next) => {
+        it('output lines to stdout if error code 0', function (next) {
             let log = console.log;
             next = assume.plan(4, next);
 
