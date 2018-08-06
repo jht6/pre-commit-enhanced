@@ -96,7 +96,7 @@ describe('install-foreach', function () {
                 assume(preCommit.run).equals(`a, b, ${SCRIPT_PCE_FOREACH}`);
             });
 
-            it(`correctly add config when it exists "${preCommitKey}":{run:" a  , b-b,  c "}`, function () {
+            it(`correctly add config when it exists "${preCommitKey}":{run:" a  , b-b  ,  c "}`, function () {
                 let json = installer.addForeachInPrecommit({
                     [preCommitKey]: {
                         run: ' a  , b-b,  c '
