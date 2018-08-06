@@ -1,5 +1,3 @@
-const LONG_TIMEOUT = 10000;
-
 const fs = require('fs');
 const path = require('path');
 const assume = require('assume');
@@ -296,7 +294,6 @@ describe('pre-commit', () => {
 
     describe('#run', () => {
         it('runs the specified scripts and exit with 0 on no error', function (next) {
-            this.timeout(LONG_TIMEOUT);
             let hook = new Hook((code, lines) => {
                 assume(code).equals(0);
                 assume(lines).is.undefined();
@@ -311,7 +308,6 @@ describe('pre-commit', () => {
         });
 
         it('runs the specified test and exits with 1 on error', function (next) {
-            this.timeout(LONG_TIMEOUT);
             let hook = new Hook((code, lines) => {
                 assume(code).equals(1);
 
