@@ -5,8 +5,10 @@ const path = require('path');
 const exists = fs.existsSync || path.existsSync;
 const utils = require('../common/utils');
 const SCRIPT_PCE_FOREACH = 'pce-foreach';
-const { FOREACH_COMMAND_TPL } = require('../common/const')();
-const FOREACH_COMMAND_KEY = 'pce-foreach-command';
+const {
+    FOREACH_COMMAND_TPL,
+    FOREACH_COMMAND_KEY
+} = require('../common/const')();
 
 function ForeachInstaller() {
     if (!this) {

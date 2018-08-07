@@ -3,8 +3,10 @@
 const assume = require('assume');
 const Installer = require('../scripts/install-foreach');
 const SCRIPT_PCE_FOREACH = 'pce-foreach';
-const FOREACH_COMMAND_KEY = 'pce-foreach-command';
-const { FOREACH_COMMAND_TPL } = require('../common/const')();
+const {
+    FOREACH_COMMAND_TPL,
+    FOREACH_COMMAND_KEY
+} = require('../common/const')();
 
 describe('install-foreach', function () {
 
