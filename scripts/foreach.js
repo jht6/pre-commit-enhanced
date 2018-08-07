@@ -4,6 +4,7 @@ console.log('start run foreach');
 
 const spawn = require('cross-spawn');
 const utils = require('../common/utils');
+const exists = require('fs').existsSync;
 
 // TODO: 遍历执行命令
 // 1. 获取到要commit的文件路径列表
@@ -26,6 +27,7 @@ function ForeachRunner() {
     }
 
     this.filePathList = [];
+    this.gitRootDirPath = process.cwd();
 }
 
 ForeachRunner.prototype.run = function () {
@@ -46,7 +48,7 @@ ForeachRunner.prototype.getGitStatus = function () {
     try {
         status = spawn.sync('git', ['status', '--porcelain'], {
             stdio: 'pipe',
-            cwd: utils.getPackageJsonDirPath()
+            cwd: this.gitRootDirPath
         }).toString();
 
         return status;
@@ -58,10 +60,16 @@ ForeachRunner.prototype.getGitStatus = function () {
     }
 };
 
-ForeachRunner.prototype.getFilePathList = function (gitStatus) {
-    let list = gitStatus.split('\n');
+ForeachRunner.prototype.getFilePathList = function (gitStatusStr) {
+    const startIndex = 3;
+    let list = gitStatusStr.split('\n');
 
-    // TODO: 过滤掉一些path
-    // 1. "??"开头的过滤掉
-    // 2. 使用fs.exists判定不存在的路径过滤掉
+    // Exclude strings which start with "??" (Untraced paths)
+    list = list.filter(path => !/^\?\?/.test(path));
+
+    list = list.map(path => path.substring(startIndex));
+
+    list = list.filter(path => exists(path));
+
+    return list;
 };
