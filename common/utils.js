@@ -5,6 +5,8 @@ function getPackageJsonDirPath() {
     return path.resolve(__dirname, '..', '..', '..');
 }
 
+// TODO: 需增加一个函数, 通过传入路径逐层向上寻找含.git文件夹的目录路径作为git根目录
+
 /**
  * Write message to the terminal.
  * If exitCode is passed in, "process.exit(exitCode)" will be called.

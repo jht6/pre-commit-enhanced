@@ -30,7 +30,7 @@ function ForeachRunner() {
     }
 
     this.filePathList = [];
-    this.gitRootDirPath = process.cwd();
+    this.packageJsonDirPath = process.cwd();
     this.command = '';
 }
 
@@ -60,8 +60,8 @@ ForeachRunner.prototype.getGitStatus = function () {
     try {
         status = spawn.sync('git', ['status', '--porcelain'], {
             stdio: 'pipe',
-            cwd: this.gitRootDirPath
-        }).toString();
+            cwd: this.packageJsonDirPath // TODO: 此处应使用git根目录作为cwd,否则命令无效
+        }).stdout.toString();
 
         return status;
     } catch (e) {
