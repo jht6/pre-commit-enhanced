@@ -45,6 +45,7 @@ ForeachInstaller.prototype.init = function () {
             `Error message is:`
         ]);
         console.log(e);
+        process.exit(1);
     }
 
     if (!this.json) {
@@ -126,6 +127,7 @@ ForeachInstaller.prototype.writeJsonToFile = function (json) {
             `Error message is:`
         ]);
         console.log(e);
+        process.exit(1);
     }
 };
 
