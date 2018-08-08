@@ -7,11 +7,11 @@ function getPackageJsonDirPath() {
 }
 
 /**
- * 从指定目录位置开始递归向上搜索含".git"文件夹的git项目根目录路径
- * @param {String} currentPath 开始搜索的目录路径
- * @return {String|null} git根目录路径, 若未找到则返回null
+ * Search the root dir of Git project recursively from appointed dir path.
+ * @param {String} currentPath The dir path where start to search.
+ * @return {String|null} the root dir path of Git project. If not found, return null.
  */
-function getGitRootDirPath(currentPath) {
+function getGitRootDirPath(currentPath, needLog) {
     currentPath = path.resolve(currentPath);
 
     let dotGitPath = path.join(currentPath, '.git');
@@ -21,10 +21,26 @@ function getGitRootDirPath(currentPath) {
         fs.existsSync(dotGitPath) &&
         fs.lstatSync(dotGitPath).isDirectory()
     ) {
+        if (needLog) {
+            log(`Found ".git" folder in ${currentPath}`);
+        }
         return currentPath;
     } else {
         let parentPath = path.resolve(currentPath, '..');
-        return parentPath === currentPath ? null : getGitRootDirPath(parentPath);
+
+        // Stop if we are on top folder
+        if (parentPath === currentPath) {
+            if (needLog) {
+                log(`Not found any ".git" folder, stop searching.`);
+            }
+            return null;
+        } else {
+            // Continue to search from parent folder.
+            if (needLog) {
+                log(`Not found ".git" folder in ${currentPath}, continue...`);
+            }
+            return getGitRootDirPath(parentPath, !!needLog);
+        }
     }
 }
 
