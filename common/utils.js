@@ -1,11 +1,32 @@
-let path = require('path');
+const path = require('path');
+const fs = require('fs');
 const { LOG_PREFIX } = require('./const')();
 
 function getPackageJsonDirPath() {
     return path.resolve(__dirname, '..', '..', '..');
 }
 
-// TODO: 需增加一个函数, 通过传入路径逐层向上寻找含.git文件夹的目录路径作为git根目录
+/**
+ * 从指定目录位置开始递归向上搜索含".git"文件夹的git项目根目录路径
+ * @param {String} currentPath 开始搜索的目录路径
+ * @return {String|null} git根目录路径, 若未找到则返回null
+ */
+function getGitRootDirPath(currentPath) {
+    currentPath = path.resolve(currentPath);
+
+    let dotGitPath = path.join(currentPath, '.git');
+
+    if (
+        fs.existsSync(currentPath) &&
+        fs.existsSync(dotGitPath) &&
+        fs.lstatSync(dotGitPath).isDirectory()
+    ) {
+        return currentPath;
+    } else {
+        let parentPath = path.resolve(currentPath, '..');
+        return parentPath === currentPath ? null : getGitRootDirPath(parentPath);
+    }
+}
 
 /**
  * Write message to the terminal.
@@ -46,5 +67,6 @@ function log(lines, exitCode, opt) {
 
 module.exports = {
     getPackageJsonDirPath,
+    getGitRootDirPath,
     log
 };
