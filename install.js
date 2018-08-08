@@ -18,35 +18,10 @@ const utils = require('./common/utils');
 // to work correctly.
 //
 
-let realGitRootPath = null;
-
-let git = getGitFolderPath(root);
-
-if (git) {
-    realGitRootPath = path.resolve(git, '..');
-}
-
-// Function to recursively finding .git folder
-function getGitFolderPath(currentPath) {
-    let git = path.resolve(currentPath, '.git')
-
-    if (!exists(git) || !fs.lstatSync(git).isDirectory()) {
-        console.log('pre-commit:');
-        console.log('pre-commit: Not found .git folder in', git);
-
-        let newPath = path.resolve(currentPath, '..');
-
-        // Stop if we on top folder
-        if (currentPath === newPath) {
-            return null;
-        }
-
-        return getGitFolderPath(newPath);
-    }
-
-    console.log('pre-commit:');
-    console.log('pre-commit: Found .git folder in', git);
-    return git;
+let realGitRootPath = utils.getGitRootDirPath(root, true);
+let git;
+if (realGitRootPath) {
+    git = path.join(realGitRootPath, '.git');
 }
 
 //
