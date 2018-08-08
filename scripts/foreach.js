@@ -1,13 +1,13 @@
 'use strict';
 
-console.log('start run foreach');
-
+const path = require('path');
 const spawn = require('cross-spawn');
 const utils = require('../common/utils');
 const exists = require('fs').existsSync;
 const {
     FOREACH_COMMAND_KEY
 } = require('../common/const')();
+const GIT_ROOT = utils.getGitRootDirPath(process.cwd());
 
 // TODO: 遍历执行命令
 // 1. 获取到要commit的文件路径列表
@@ -60,7 +60,7 @@ ForeachRunner.prototype.getGitStatus = function () {
     try {
         status = spawn.sync('git', ['status', '--porcelain'], {
             stdio: 'pipe',
-            cwd: utils.getGitRootDirPath(process.cwd())
+            cwd: GIT_ROOT
         }).stdout.toString();
 
         return status;
@@ -74,16 +74,15 @@ ForeachRunner.prototype.getGitStatus = function () {
 
 ForeachRunner.prototype.getFilePathList = function (gitStatusStr) {
     const startIndex = 3;
-    let list = gitStatusStr.split('\n');
+    let pathList = gitStatusStr.split('\n')
+        // Exclude empty string and which starts with "??"(Untraced paths)
+        .filter(item => !!item && !/^\?\?/.test(item))
+        // Transform to absolute path
+        .map(item => path.join(GIT_ROOT ,item.substring(startIndex)))
+        // Confirm the path exists
+        .filter(item => exists(item));
 
-    // Exclude strings which start with "??" (Untraced paths)
-    list = list.filter(path => !/^\?\?/.test(path));
-
-    list = list.map(path => path.substring(startIndex));
-
-    list = list.filter(path => exists(path));
-
-    return list;
+    return pathList;
 };
 
 ForeachRunner.prototype.getCommandFromPackageJson = function () {
