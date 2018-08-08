@@ -52,7 +52,7 @@ ForeachRunner.prototype.run = function () {
     }
 
     this.command = this.getCommandFromPackageJson();
-    console.log('this.command: ' + this.command);
+    // TODO: 解析this.command, 并遍历this.filePathList, 执行命令
 };
 
 ForeachRunner.prototype.getGitStatus = function () {
