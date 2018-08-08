@@ -11,7 +11,7 @@ const {
 } = require('../common/const')();
 
 function ForeachInstaller() {
-    if (!this) {
+    if (!new.target) {
         return new ForeachInstaller();
     }
 

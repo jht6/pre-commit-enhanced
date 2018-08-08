@@ -16,7 +16,7 @@ const utils = require('./common/utils');
  * @api public
  */
 function Hook(fn, options) {
-    if (!this) {
+    if (!new.target) {
         return new Hook(fn, options);
     }
 
