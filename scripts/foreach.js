@@ -5,7 +5,8 @@ const spawn = require('cross-spawn');
 const utils = require('../common/utils');
 const exists = require('fs').existsSync;
 const {
-    FOREACH_COMMAND_KEY
+    FOREACH_COMMAND_KEY,
+    FOREACH_COMMAND_PARAM
 } = require('../common/const')();
 const GIT_ROOT = utils.getGitRootDirPath(process.cwd());
 
@@ -27,7 +28,7 @@ const GIT_ROOT = utils.getGitRootDirPath(process.cwd());
 //    spawnSync("cmd-name", ["cmd-opt", "绝对路径"], {stdio: [0, 1, 2]})
 
 function ForeachRunner() {
-    if (!new.targe) {
+    if (!new.target) {
         return new ForeachRunner();
     }
 
@@ -54,7 +55,8 @@ ForeachRunner.prototype.run = function () {
     }
 
     this.command = this.getCommandFromPackageJson();
-    // TODO: 解析this.command, 并遍历this.filePathList, 执行命令
+    this.parsedCommand = this.parseCommand(this.command);
+    this.traverse(this.filePathList, this.parsedCommand);
 };
 
 ForeachRunner.prototype.getGitStatus = function () {
@@ -110,6 +112,43 @@ ForeachRunner.prototype.getCommandFromPackageJson = function () {
     }
 
     return command;
+};
+
+ForeachRunner.prototype.validateCommand = function (command) {
+    const re = new RegExp(`^.*[\\w]+\\s+${FOREACH_COMMAND_PARAM}(\\s+.*)*`);
+    return re.test(command);
+};
+
+ForeachRunner.prototype.parseCommand = function (command) {
+    if (!this.validateCommand(command)) {
+        utils.log([
+            `Your "pce-foreach-command" value is "${command}"`,
+            `It's format is incorrect, please modify it in package.json. For example:`,
+            `"echo ${FOREACH_COMMAND_PARAM}"`
+        ], 1);
+    }
+
+    command = command.trim().split(/\s+/);
+
+    let args = command.slice(1);
+    let ret = {
+        cmd: command[0],
+        args: args,
+        paramIndex: args.indexOf(FOREACH_COMMAND_PARAM)
+    };
+
+    return ret;
+};
+
+ForeachRunner.prototype.traverse = function (pathList, parsedCommand) {
+    const { cmd, paramIndex } = parsedCommand;
+    let args = parsedCommand.args.slice(0);
+    pathList.forEach(filePath => {
+        args[paramIndex] = filePath;
+        spawn.sync(cmd, args, {
+            stdio: [0, 1, 2]
+        });
+    });
 };
 
 // Expose the Hook instance so we can use it for testing purposes.
