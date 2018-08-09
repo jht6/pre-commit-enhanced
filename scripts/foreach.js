@@ -25,7 +25,7 @@ const GIT_ROOT = utils.getGitRootDirPath(process.cwd());
 //    spawnSync("cmd-name", ["cmd-opt", "绝对路径"], {stdio: [0, 1, 2]})
 
 function ForeachRunner() {
-    if (!this) {
+    if (!new.targe) {
         return new ForeachRunner();
     }
 
