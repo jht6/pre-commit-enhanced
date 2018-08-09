@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const exists = fs.existsSync;
 const utils = require('../common/utils');
+
 const SCRIPT_PCE_FOREACH = 'pce-foreach';
 const {
     FOREACH_COMMAND_TPL,

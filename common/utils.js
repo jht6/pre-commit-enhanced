@@ -22,7 +22,7 @@ function getGitRootDirPath(currentPath, needLog) {
         fs.lstatSync(dotGitPath).isDirectory()
     ) {
         if (needLog) {
-            log(`Found ".git" folder in ${currentPath}`);
+            log(`Success: Found ".git" folder in ${currentPath}`);
         }
         return currentPath;
     } else {
