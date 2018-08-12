@@ -43,6 +43,11 @@ ForeachRunner.prototype.run = function () {
     this.traverse(this.filePathList, this.parsedCommand);
 };
 
+/**
+ * Execute "git status --porcelain" in Git project root folder,
+ * and get a status string that can be parsed simply.
+ * @return {String} string of git status
+ */
 ForeachRunner.prototype.getGitStatus = function () {
     let status = '';
     try {
@@ -60,6 +65,12 @@ ForeachRunner.prototype.getGitStatus = function () {
     }
 };
 
+/**
+ * Get list of absolute file paths from string of git status, only retaining
+ * paths of new and modified file.
+ * @param {String} gitStatusStr output of running "git status --porcelain"
+ * @return {Array} list of paths
+ */
 ForeachRunner.prototype.getFilePathList = function (gitStatusStr) {
     const startIndex = 3;
     let pathList = gitStatusStr.split('\n')
@@ -73,6 +84,10 @@ ForeachRunner.prototype.getFilePathList = function (gitStatusStr) {
     return pathList;
 };
 
+/**
+ * Get the value of "pce-foreach-command" property from package.json.
+ * @return {String} the value of "pce-foreach-command"
+ */
 ForeachRunner.prototype.getCommandFromPackageJson = function () {
     let json = null,
         command = '';
@@ -98,11 +113,21 @@ ForeachRunner.prototype.getCommandFromPackageJson = function () {
     return command;
 };
 
+/**
+ * Validate if the passed command is like "command-name [...] <filepath> [...]".
+ * @param {String} command string of command
+ * @return {Boolean} if the command is legal
+ */
 ForeachRunner.prototype.validateCommand = function (command) {
     const re = new RegExp(`^.*[\\w]+\\s+${FOREACH_COMMAND_PARAM}(\\s+.*)*`);
     return re.test(command);
 };
 
+/**
+ * Get parsed command from original command string.
+ * @param {String} command original command string
+ * @return {Object} an object contains info of command
+ */
 ForeachRunner.prototype.parseCommand = function (command) {
     if (!this.validateCommand(command)) {
         utils.log([
@@ -124,6 +149,11 @@ ForeachRunner.prototype.parseCommand = function (command) {
     return ret;
 };
 
+/**
+ * Traverse list of paths and execute command for each path.
+ * @param {Array} pathList list of file paths
+ * @param {Object} parsedCommand result of "parseCommand" method
+ */
 ForeachRunner.prototype.traverse = function (pathList, parsedCommand) {
     const { cmd, paramIndex } = parsedCommand;
     let args = parsedCommand.args.slice(0);
