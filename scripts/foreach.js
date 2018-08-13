@@ -78,15 +78,23 @@ ForeachRunner.prototype.getGitStatus = function () {
  */
 ForeachRunner.prototype.getFilePathList = function (gitStatusStr) {
     const startIndex = 3;
-    const gitRoot = this._OPT_.isTesting && this._OPT_.gitRoot ?
-        this._OPT_.gitRoot : GIT_ROOT;
+    const testFlag = this._OPT_;
+    const gitRoot = testFlag.isTesting && testFlag.gitRoot ?
+        testFlag.gitRoot : GIT_ROOT;
+
     let pathList = gitStatusStr.split('\n')
         // Exclude empty string and which starts with "??"(Untraced paths)
-        .filter(item => !!item && !/^\?\?/.test(item))
-        // Transform to absolute path
-        .map(item => path.join(gitRoot ,item.substring(startIndex)))
-        // Confirm the path exists
-        .filter(item => exists(item));
+        .filter(item => !!item && !/^\?\?/.test(item));
+
+    // Transform to absolute path
+    if (!(testFlag.isTesting && testFlag.skipMapToAbsPath)) {
+        pathList = pathList.map(item => path.join(gitRoot ,item.substring(startIndex)));
+    }
+
+    // Confirm the path exists
+    if (!(testFlag.isTesting && testFlag.skipFilterNotExist)) {
+        pathList = pathList.filter(item => exists(item));
+    }
 
     return pathList;
 };
