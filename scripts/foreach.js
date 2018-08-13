@@ -11,11 +11,16 @@ const {
     FOREACH_COMMAND_PARAM
 } = require('../common/const')();
 
-function ForeachRunner() {
+/**
+ * Foreach runner constructor.
+ * @param {Object} options Optional configuration, primarily used for testing.
+ */
+function ForeachRunner(options) {
     if (!new.target) {
         return new ForeachRunner();
     }
 
+    this._OPT_ = options || {};
     this.filePathList = [];
     this.packageJsonDirPath = process.cwd();
     this.command = '';
@@ -73,11 +78,13 @@ ForeachRunner.prototype.getGitStatus = function () {
  */
 ForeachRunner.prototype.getFilePathList = function (gitStatusStr) {
     const startIndex = 3;
+    const gitRoot = this._OPT_.isTesting && this._OPT_.gitRoot ?
+        this._OPT_.gitRoot : GIT_ROOT;
     let pathList = gitStatusStr.split('\n')
         // Exclude empty string and which starts with "??"(Untraced paths)
         .filter(item => !!item && !/^\?\?/.test(item))
         // Transform to absolute path
-        .map(item => path.join(GIT_ROOT ,item.substring(startIndex)))
+        .map(item => path.join(gitRoot ,item.substring(startIndex)))
         // Confirm the path exists
         .filter(item => exists(item));
 
