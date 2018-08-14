@@ -134,7 +134,7 @@ ForeachRunner.prototype.getCommandFromPackageJson = function () {
  * @return {Boolean} if the command is legal
  */
 ForeachRunner.prototype.validateCommand = function (command) {
-    const re = new RegExp(`^.*[\\w]+\\s+${FOREACH_COMMAND_PARAM}(\\s+.*)*`);
+    const re = new RegExp(`^.*[\\w]+\\s+${FOREACH_COMMAND_PARAM}(\\s+.*)*$`);
     return re.test(command);
 };
 
