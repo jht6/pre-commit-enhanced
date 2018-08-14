@@ -145,11 +145,15 @@ ForeachRunner.prototype.validateCommand = function (command) {
  */
 ForeachRunner.prototype.parseCommand = function (command) {
     if (!this.validateCommand(command)) {
-        utils.log([
-            `Your "pce-foreach-command" value is "${command}"`,
-            `It's format is incorrect, please modify it in package.json. For example:`,
-            `"echo ${FOREACH_COMMAND_PARAM}"`
-        ], 1);
+        if (this._OPT_.isTesting) {
+            return null;
+        } else {
+            utils.log([
+                `Your "pce-foreach-command" value is "${command}"`,
+                `It's format is incorrect, please modify it in package.json. For example:`,
+                `"echo ${FOREACH_COMMAND_PARAM}"`
+            ], 1);
+        }
     }
 
     command = command.trim().split(/\s+/);
