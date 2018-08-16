@@ -51,8 +51,9 @@ function getGitRootDirPath(currentPath, needLog) {
  * @param {Number} exitCode Exit code for the process.exit.
  * @param {Object} opt Options for printing:
  *   noColor: if set as true, there will be no color under log prefix.
+ * @param {Boolean} isTesting Options for unit testing, you shouldn't use it.
  */
-function log(lines, exitCode, opt) {
+function log(lines, exitCode, opt, isTesting) {
     opt = opt || {};
 
     if (!Array.isArray(lines)) {
@@ -76,7 +77,12 @@ function log(lines, exitCode, opt) {
         }
     });
 
-    if (typeof exitCode === 'number') {
+    if (isTesting) {
+        return {
+            lines,
+            exitCode
+        };
+    } else if (typeof exitCode === 'number') {
         process.exit(exitCode);
     }
 }
