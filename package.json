@@ -43,6 +43,6 @@
     "pre-commit-enhanced": "git://github.com/Orange-J/pre-commit-enhanced.git"
   },
   "engines": {
-    "node": ">=6.10.0"
+    "node": ">=6.0.0"
   }
 }
