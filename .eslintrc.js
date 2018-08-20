@@ -8,6 +8,7 @@ module.exports = {
         "ecmaVersion": 2018
     },
     "rules": {
+        "no-console": 0,
         "indent": [
             "error",
             4
@@ -18,7 +19,10 @@ module.exports = {
         ],
         "quotes": [
             "error",
-            "single"
+            "single",
+            {
+                "allowTemplateLiterals": true
+            }
         ],
         "semi": [
             "error",
