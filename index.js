@@ -185,7 +185,7 @@ Hook.prototype.initialize = function initialize() {
     ['git', 'npm'].forEach(function each(binary) {
         try {
             this[binary] = which.sync(binary);
-        } catch (e) {}
+        } catch (e) { /* do nothing */ }
     }, this);
 
     //

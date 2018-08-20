@@ -75,7 +75,7 @@ if (exists(precommit) && !fs.lstatSync(precommit).isSymbolicLink()) {
 //
 try {
     fs.unlinkSync(precommit);
-} catch (e) {}
+} catch (e) { /* do nothing */ }
 
 // Create generic precommit hook that launches this modules hook (as well
 // as stashing - unstashing the unstaged changes)
@@ -85,7 +85,7 @@ try {
 let hookRelativeUnixPath = hook.replace(realGitRootPath, '.');
 
 if (os.platform() === 'win32') {
-    hookRelativeUnixPath = hookRelativeUnixPath.replace(/[\\\/]+/g, '/');
+    hookRelativeUnixPath = hookRelativeUnixPath.replace(/[\\/]+/g, '/');
 }
 
 let precommitContent = '#!/usr/bin/env bash' + os.EOL +
