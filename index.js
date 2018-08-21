@@ -148,7 +148,7 @@ Hook.prototype.log = function log(lines, exit) {
         lines = lines.split('\n');
     }
     if (typeof exit !== 'number') {
-        exit = 1
+        exit = 1;
     }
     let prefix = this.colors ?
         '\u001b[38;5;166mpre-commit:\u001b[39;49m ' :
