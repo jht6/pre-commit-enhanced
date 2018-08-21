@@ -144,7 +144,7 @@ json.scripts['pce-install-foreach'] = [
 
 const spaceCount = 2;
 try {
-    fs.writeFileSync(packageJsonPath, JSON.stringify(json, null, spaceCount));
+    fs.writeFileSync(packageJsonPath, JSON.stringify(json, null, spaceCount) + '\n');
     console.error('pre-commit:');
     console.error('pre-commit: Success: Add "pce-install-foreach" scripts in package.json at ' + packageJsonPath);
     console.error('pre-commit:');
