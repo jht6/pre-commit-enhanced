@@ -115,7 +115,7 @@ ForeachInstaller.prototype.addForeachCommand = function (json) {
 ForeachInstaller.prototype.writeJsonToFile = function (json) {
     const spaceCount = 2;
     try {
-        fs.writeFileSync(this.packageJsonPath, JSON.stringify(json, null, spaceCount));
+        fs.writeFileSync(this.packageJsonPath, JSON.stringify(json, null, spaceCount) + '\n');
         utils.log([
             `Success: Add "${SCRIPT_PCE_FOREACH}" in "scripts" of package.json`,
             `Success: Add "${SCRIPT_PCE_FOREACH}" in "pre-commit" of package.json`,
