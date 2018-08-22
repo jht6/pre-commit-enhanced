@@ -1,3 +1,6 @@
+## 1.1.0
+- Automatically add config of "pce-foreach" into package.json.
+- Configurable command that will execute for every file path that is being committed.
 
 ## 1.0.5
 - Autosearch the root directory of git project.
