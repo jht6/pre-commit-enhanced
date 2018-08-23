@@ -2,7 +2,7 @@
 
 [![Version npm][version]](http://browsenpm.org/package/pre-commit-enhanced)
 
-[version]: http://img.shields.io/npm/v/pre-commit.svg?style=flat-square
+[version]: https://img.shields.io/npm/v/pre-commit-enhanced.svg?style=flat-square
 
 **pre-commit-enhanced** is a pre-commit hook installer for `git` based on pre-commit. It will ensure that
 your `npm test` (or other specified scripts) passes before you can commit your
