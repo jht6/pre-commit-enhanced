@@ -1,11 +1,8 @@
 # pre-commit-enhanced
 
-[![Version npm][version]](http://browsenpm.org/package/pre-commit)[![Build Status][build]](https://travis-ci.org/observing/pre-commit)[![Dependencies][david]](https://david-dm.org/observing/pre-commit)[![Coverage Status][cover]](https://coveralls.io/r/observing/pre-commit?branch=master)
+[![Version npm][version]](http://browsenpm.org/package/pre-commit-enhanced)
 
 [version]: http://img.shields.io/npm/v/pre-commit.svg?style=flat-square
-[build]: http://img.shields.io/travis/observing/pre-commit/master.svg?style=flat-square
-[david]: https://img.shields.io/david/observing/pre-commit.svg?style=flat-square
-[cover]: http://img.shields.io/coveralls/observing/pre-commit/master.svg?style=flat-square
 
 **pre-commit-enhanced** is a pre-commit hook installer for `git` based on pre-commit. It will ensure that
 your `npm test` (or other specified scripts) passes before you can commit your
