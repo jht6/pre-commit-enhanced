@@ -29,8 +29,7 @@ the existing `pre-commit` file in your `.git/hooks` folder. Existing
 
 ### Configuration
 
-`pre-commit-enhanced` will try to run your `npm test` command in the root of the git
-repository by default unless it's the default value that is set by the `npm
+`pre-commit-enhanced` will try to run your `npm test` command in the directory contians `package.json` by default unless it's the default value that is set by the `npm
 init` script. 
 
 But `pre-commit-enhanced` is not limited to just running your `npm test`'s during the
