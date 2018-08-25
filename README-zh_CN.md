@@ -17,3 +17,8 @@ npm install --save-dev pre-commit-enhanced
 ```
 
 若你的 `.git/hooks` 目录内已经存在 `pre-commit` 文件, 那么在本模块安装完后会用新的 `pre-commit` 文件覆盖它, 并且将原有的 `pre-commit` 重命名为 `pre-commit.old`.
+
+### 配置
+
+默认情况下, `pre-commit-enhanced` 会在含 `package.json` 文件的目录内执行 `npm test` 命令. 但如果 `package.json` 文件的 `test` 命令内容是执行 `npm init` 时所填充的初始值, 就不会执行它.
+
