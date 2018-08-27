@@ -178,9 +178,13 @@ ForeachRunner.prototype.traverse = function (pathList, parsedCommand) {
     let args = parsedCommand.args.slice(0);
     pathList.forEach(filePath => {
         args[paramIndex] = filePath;
-        spawn.sync(cmd, args, {
+        let ret = spawn.sync(cmd, args, {
             stdio: [0, 1, 2]
         });
+
+        if (ret.status) {
+            process.exit(ret.status);
+        }
     });
 };
 
