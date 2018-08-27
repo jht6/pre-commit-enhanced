@@ -49,3 +49,55 @@ npm install --save-dev pre-commit-enhanced
   ]
 }
 ```
+
+在上面的例子中, 它会先执行 `npm run foo`, 再执行 `npm run bar`, 最后执行 `npm run test`. 其中 `npm run test` 会使commit失败, 因为它返回了错误码 `1`. 如果你更喜欢用字符串来配置, 或者更喜欢使用不带横杠的 `precommit`, 你也可以这样配置:
+
+```js
+{
+  "precommit": "foo, bar, test"
+  "pre-commit": "foo, bar, test"
+  "pre-commit": ["foo", "bar", "test"]
+  "precommit": ["foo", "bar", "test"],
+  "precommit": {
+    "run": "foo, bar, test",
+  },
+  "pre-commit": {
+    "run": ["foo", "bar", "test"],
+  },
+  "precommit": {
+    "run": ["foo", "bar", "test"],
+  },
+  "pre-commit": {
+    "run": "foo, bar, test",
+  }
+}
+```
+
+上面所有这些配置的效果都是一样的. 除了配置要执行的脚本, 你还可以配置以下选项:
+
+- **silent** 布尔值, 默认为false. 若配置true, 则在运行失败或没有脚本可执行时, 不输出任何带 `pre-commit:` 前缀的提示信息.
+- **colors** 布尔值, 默认为true. 若配置false, 则在输出信息时文字不带颜色.
+- **template** 一个文件路径. 该文件的内容将被用作commit时的信息模板.
+
+这些选项可以加在 `pre-commit`/`precommit`对象中, 也可用 `"pre-commit.{key}` 的格式配置在 `package.json` 中.
+
+```js
+{
+  "precommit.silent": true,
+  "pre-commit": {
+    "silent": true
+  }
+}
+```
+
+以上两种配置的效果是一样的. 你可以根据项目实际情况选择合适的配置风格. 想了解更多关于scripts的信息, 请阅读 `npm` 官方文档:
+
+https://npmjs.org/doc/scripts.html
+
+想了解更多关于git钩子的信息, 请阅读:
+
+http://githooks.com
+
+### 许可证
+
+MIT
