@@ -22,3 +22,30 @@ npm install --save-dev pre-commit-enhanced
 
 默认情况下, `pre-commit-enhanced` 会在含 `package.json` 文件的目录内执行 `npm test` 命令. 但如果 `package.json` 文件的 `test` 命令内容是执行 `npm init` 时所填充的初始值, 就不会执行它.
 
+`pre-commit-enhanced` 不仅仅能够在pre-commit钩子运行期间执行 `npm test`, 它可以执行你在 `package.json` 的 "script" 字段中指定的任意命令. 因此可以在提交前确保:
+
+- 代码达到100%覆盖率
+- 所有的代码风格校验通过
+- JSHint 校验通过
+- 贡献许可签名等等.
+
+而你只需在 `package.json` 中添加一个 `pre-commit` 数组指定需要执行哪些scripts以及它们的执行顺序:
+
+```js
+{
+  "name": "437464d0899504fb6b7b",
+  "version": "0.0.0",
+  "description": "ERROR: No README.md file found!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1",
+    "foo": "echo \"fooo\" && exit 0",
+    "bar": "echo \"bar\" && exit 0"
+  },
+  "pre-commit": [
+    "foo",
+    "bar",
+    "test"
+  ]
+}
+```
