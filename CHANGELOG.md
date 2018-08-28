@@ -1,3 +1,6 @@
+## 1.1.1
+- Fix bug: In foreach.js, if a sub-process fail, current process should exit with a non-zero code to make git hook fail.
+
 ## 1.1.0
 - Automatically add config of "pce-foreach" into package.json.
 - Configurable command that will execute for every file path that is being committed.
