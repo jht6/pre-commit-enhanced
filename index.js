@@ -270,13 +270,16 @@ Hook.prototype.initialize = function initialize() {
  */
 Hook.prototype.run = function runner() {
     let hooked = this;
+    let timeList = [];
 
     (function again(scripts) {
         if (scripts.length === 0) {
+            hooked.printTime(timeList);
             return hooked.exit(0);
         }
 
         let script = scripts.shift();
+        let startTime = +new Date();
 
         //
         // There's a reason on why we're using an async `spawn` here instead of the
@@ -291,6 +294,12 @@ Hook.prototype.run = function runner() {
             cwd: hooked.packageJsonDir,
             stdio: [0, 1, 2]
         }).once('close', function closed(code) {
+            let endTime = +new Date();
+            timeList.push({
+                cmd: `npm run ${script}`,
+                time: endTime - startTime
+            });
+
             if (code) {
                 return hooked.log(hooked.format(Hook.log.failure, script, code));
             }
@@ -298,6 +307,27 @@ Hook.prototype.run = function runner() {
             again(scripts);
         });
     })(hooked.config.run.slice(0));
+};
+
+/**
+ * Print each command's and total consuming time.
+ * @param {timeList} timeList
+ */
+Hook.prototype.printTime = function (timeList) {
+    function formatTime(timeMs) {
+        return timeMs / 1000;
+    }
+
+    let sum = 0,
+        ret = '';
+    timeList.forEach(item => {
+        sum += item.time;
+        ret += `${item.cmd}: ${formatTime(item.time)}s\n`;
+    });
+
+    ret += `Total: ${formatTime(sum)}s\n`;
+
+    console.log(`====================\npre-commit consuming time:\n\n${ret}====================\n`);
 };
 
 /**
