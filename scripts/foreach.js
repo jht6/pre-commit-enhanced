@@ -176,16 +176,21 @@ ForeachRunner.prototype.parseCommand = function (command) {
 ForeachRunner.prototype.traverse = function (pathList, parsedCommand) {
     const { cmd, paramIndex } = parsedCommand;
     let args = parsedCommand.args.slice(0);
+    let isPassed = true;
     pathList.forEach(filePath => {
         args[paramIndex] = filePath;
         let ret = spawn.sync(cmd, args, {
             stdio: [0, 1, 2]
         });
 
-        if (ret.status) {
-            process.exit(ret.status);
+        if (ret.status && isPassed) {
+            isPassed = false;
         }
     });
+
+    if (!isPassed) {
+        process.exit(1);
+    }
 };
 
 // Expose the Hook instance so we can use it for testing purposes.
