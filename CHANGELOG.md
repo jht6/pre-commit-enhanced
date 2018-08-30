@@ -1,3 +1,7 @@
+## 1.1.2
+- Add feature: show consuming time after run scripts.
+- In foreach.js, it will execute command for all filepaths even though it has failed for some filepaths.
+
 ## 1.1.1
 - Fix bug: In foreach.js, if a sub-process fail, current process should exit with a non-zero code to make git hook fail.
 
