@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-HAS_NODE=`which node 2> /dev/null || which nodejs 2> /dev/null || which iojs 2> /dev/null`
+HAS_NODE=`which node 2> /dev/null`
 
 #
 # There are some issues with Source Tree because paths are not set correctly for
