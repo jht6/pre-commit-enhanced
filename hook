@@ -19,8 +19,6 @@ if [[ -z "$HAS_NODE" ]]; then
 fi
 
 NODE=`which node 2> /dev/null`
-# NODEJS=`which nodejs 2> /dev/null`
-# IOJS=`which iojs 2> /dev/null`
 LOCAL="/usr/local/bin/node"
 BINARY=
 GIT_ROOT_DIR=
@@ -30,10 +28,6 @@ GIT_ROOT_DIR=
 #
 if [[ -n "$NODE" ]]; then
   BINARY="$NODE"
-# elif [[ -n "$NODEJS" ]]; then
-#   BINARY="$NODEJS"
-# elif [[ -n "$IOJS" ]]; then
-#   BINARY="$IOJS"
 elif [[ -x "$LOCAL" ]]; then
   BINARY="$LOCAL"
 fi
