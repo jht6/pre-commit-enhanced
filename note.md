@@ -8,7 +8,7 @@ TODO:
 
 
 3. other
-    1) 获取提交文件列表的功能抽出到common作为公共函数, 相应的单元测试也需要转移
+    已完成..1) 获取提交文件列表的功能抽出到common作为公共函数, 相应的单元测试也需要转移
     2) 安装本包时, 需在package.json中添加install-pce-batch, 功能是将scripts/pce-batch.js复制到package.json所在目录, 同时自动在pre-commit和scripts中添加相应的命令
     3) pce-batch.js中有关功能的标志位都提到顶部, 方便使用者自行配置
 
