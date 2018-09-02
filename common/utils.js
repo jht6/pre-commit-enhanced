@@ -1,5 +1,7 @@
 const path = require('path');
 const fs = require('fs');
+const spawn = require('cross-spawn');
+const exists = require('fs').existsSync;
 const { LOG_PREFIX } = require('./const')();
 
 function getPackageJsonDirPath() {
@@ -87,8 +89,62 @@ function log(lines, exitCode, opt, isTesting) {
     }
 }
 
+/**
+ * Execute "git status --porcelain" in Git project root folder,
+ * and get a status string that can be parsed simply.
+ * @return {String} string of git status
+ */
+function getGitStatus() {
+    let status = '';
+    try {
+        status = spawn.sync('git', ['status', '--porcelain'], {
+            stdio: 'pipe',
+            cwd: getGitRootDirPath(process.cwd())
+        }).stdout.toString();
+
+        return status;
+    } catch (e) {
+        log([
+            `Fail: run "git status --porcelain",`,
+            `Skipping running foreach.`
+        ], 0);
+    }
+}
+
+/**
+ * Get list of absolute file paths from string of git status, only retaining
+ * paths of new and modified file.
+ * @param {String} gitStatusStr output of running "git status --porcelain"
+ * @param {Object} testFlag just for testing.
+ * @return {Array} list of paths
+ */
+function getFilePathList(gitStatusStr, testFlag) {
+    testFlag = testFlag || {};
+    const startIndex = 3;
+    const gitRoot = testFlag.isTesting && testFlag.gitRoot ?
+        testFlag.gitRoot : getGitRootDirPath(process.cwd());
+
+    let pathList = gitStatusStr.split('\n')
+        // Exclude empty string and which starts with "??"(Untraced paths)
+        .filter(item => !!item && !/^\?\?/.test(item));
+
+    // Transform to absolute path
+    if (!(testFlag.isTesting && testFlag.skipMapToAbsPath)) {
+        pathList = pathList.map(item => path.join(gitRoot ,item.substring(startIndex)));
+    }
+
+    // Confirm the path exists
+    if (!(testFlag.isTesting && testFlag.skipFilterNotExist)) {
+        pathList = pathList.filter(item => exists(item));
+    }
+
+    return pathList;
+}
+
 module.exports = {
     getPackageJsonDirPath,
     getGitRootDirPath,
-    log
+    log,
+    getGitStatus,
+    getFilePathList
 };

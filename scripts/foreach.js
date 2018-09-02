@@ -3,9 +3,7 @@
 const path = require('path');
 const spawn = require('cross-spawn');
 const utils = require('../common/utils');
-const exists = require('fs').existsSync;
 
-const GIT_ROOT = utils.getGitRootDirPath(process.cwd());
 const {
     FOREACH_COMMAND_KEY,
     FOREACH_COMMAND_PARAM
@@ -27,7 +25,7 @@ function ForeachRunner(options) {
 }
 
 ForeachRunner.prototype.run = function () {
-    let gitStatus = this.getGitStatus();
+    let gitStatus = utils.getGitStatus();
     if (!gitStatus) {
         utils.log([
             `There is nothing to commit,`,
@@ -35,7 +33,7 @@ ForeachRunner.prototype.run = function () {
         ], 0);
     }
 
-    this.filePathList = this.getFilePathList(gitStatus);
+    this.filePathList = utils.getFilePathList(gitStatus);
     if (!this.filePathList.length) {
         utils.log([
             `There is nothing to traverse,`,
@@ -46,57 +44,6 @@ ForeachRunner.prototype.run = function () {
     this.command = this.getCommandFromPackageJson();
     this.parsedCommand = this.parseCommand(this.command);
     this.traverse(this.filePathList, this.parsedCommand);
-};
-
-/**
- * Execute "git status --porcelain" in Git project root folder,
- * and get a status string that can be parsed simply.
- * @return {String} string of git status
- */
-ForeachRunner.prototype.getGitStatus = function () {
-    let status = '';
-    try {
-        status = spawn.sync('git', ['status', '--porcelain'], {
-            stdio: 'pipe',
-            cwd: GIT_ROOT
-        }).stdout.toString();
-
-        return status;
-    } catch (e) {
-        utils.log([
-            `Fail: run "git status --porcelain",`,
-            `Skipping running foreach.`
-        ], 0);
-    }
-};
-
-/**
- * Get list of absolute file paths from string of git status, only retaining
- * paths of new and modified file.
- * @param {String} gitStatusStr output of running "git status --porcelain"
- * @return {Array} list of paths
- */
-ForeachRunner.prototype.getFilePathList = function (gitStatusStr) {
-    const startIndex = 3;
-    const testFlag = this._OPT_;
-    const gitRoot = testFlag.isTesting && testFlag.gitRoot ?
-        testFlag.gitRoot : GIT_ROOT;
-
-    let pathList = gitStatusStr.split('\n')
-        // Exclude empty string and which starts with "??"(Untraced paths)
-        .filter(item => !!item && !/^\?\?/.test(item));
-
-    // Transform to absolute path
-    if (!(testFlag.isTesting && testFlag.skipMapToAbsPath)) {
-        pathList = pathList.map(item => path.join(gitRoot ,item.substring(startIndex)));
-    }
-
-    // Confirm the path exists
-    if (!(testFlag.isTesting && testFlag.skipFilterNotExist)) {
-        pathList = pathList.filter(item => exists(item));
-    }
-
-    return pathList;
 };
 
 /**
