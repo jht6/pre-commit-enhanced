@@ -1,6 +1,5 @@
 'use strict';
 
-const path = require('path');
 const assume = require('assume');
 const ForeachRunner = require('../scripts/foreach');
 
