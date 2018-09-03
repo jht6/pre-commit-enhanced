@@ -12,3 +12,23 @@ TODO:
     2) 安装本包时, 需在package.json中添加install-pce-batch, 功能是将scripts/pce-batch.js复制到package.json所在目录, 同时自动在pre-commit和scripts中添加相应的命令
     3) pce-batch.js中有关功能的标志位都提到顶部, 方便使用者自行配置
 
+4. 完整场景的回归测试:
+    1) 创建临时目录, 构造目录文件结构, 主要含两种:
+        一是: 普通场景, 即单纯的前端项目, package.json就在git仓库根目录
+        .
+        └── root
+            ├── .git
+            ├── node_modules
+            └── package.json
+
+        二是: 复杂场景, 即前端代码不在git仓库根目录, 而在子目录中, 例如:
+        .
+        └── root
+            ├── .git
+            └── ui
+                ├── node_modules
+                │   └── xxx
+                ├── src
+                │   └── xxx
+                └── package.json
+
