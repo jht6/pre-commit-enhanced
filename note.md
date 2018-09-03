@@ -13,7 +13,7 @@ TODO:
     3) pce-batch.js中有关功能的标志位都提到顶部, 方便使用者自行配置
 
 4. 完整场景的回归测试:
-    1) 创建临时目录, 构造目录文件结构, 主要含两种:
+    0) 提前预设好测试的目录结构(含.gitignore, package.json), 主要含两种:
         一是: 普通场景, 即单纯的前端项目, package.json就在git仓库根目录
         .
         └── root
@@ -31,4 +31,14 @@ TODO:
                 ├── src
                 │   └── xxx
                 └── package.json
+    1) 在git仓库之外创建临时目录, 并将提前预设好的测试目录结构copy过来.
+    2) 将本模块必要的代码copy到临时目录的对应node_modules/pre-commit-enhanced目录中
+    3) 初始化git仓库
+    3) (TP) 执行install.js后, 检测hook钩子是否安装成功
+    4) (TP) pre-commit配置了exit 0的命令时, 修改某个文件后, 执行git add . && git commit -m 'test'后, 查看git status状态为空
+    5) (TP) 修改某个文件后, 调整pre-commit为exit 1, 执行git add . && git commit -m 'test'后, 查看git status状态不空
+    6) 清除git status
+    7) (TP) 执行npm run pce-install-foreach, 检测package.json中的pre-commit和scripts中是否有应有的内容
+    8) (TP) pre-commit配置pce-foreach为exit 0后, 执行git add . && git commit -m 'test'后, 查看git status状态为空
+    9) (TP) 修改某个文件后, 调整pce-foreach为exit 1, 执行git add . && git commit -m 'test'后, 查看git status状态不空
 
