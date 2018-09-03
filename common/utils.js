@@ -4,6 +4,9 @@ const spawn = require('cross-spawn');
 const exists = require('fs').existsSync;
 const { LOG_PREFIX } = require('./const')();
 
+/**
+ * Get absolute path of directory which contains the 'package.json'.
+ */
 function getPackageJsonDirPath() {
     return path.resolve(__dirname, '..', '..', '..');
 }
