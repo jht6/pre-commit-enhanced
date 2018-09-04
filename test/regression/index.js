@@ -43,7 +43,7 @@ try {
     return;
 }
 
-// Copy code file
+// Copy code file.
 try {
     [
         'common',
@@ -61,7 +61,18 @@ try {
     return;
 }
 
-// Run install.js
+// Install dependence for copied code.
+try {
+    execSync([
+        `cd ${TESTING_DIR_NAME}/node_modules/pre-commit-enhanced`,
+        `npm install --production`
+    ].join(` && `));
+} catch (e) {
+    utils.log(`Error occured when install dependence for copied code in sandbox, skip testing.`);
+    return;
+}
+
+// Run install.js.
 describe('regression - install.js', function () {
     let ok = true;
     try {
