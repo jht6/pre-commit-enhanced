@@ -34,7 +34,7 @@ try {
         `mkdir pre-commit-enhanced`,
         `cd ..`,
         `echo node_modules > .gitignore`,
-        `echo {} > package.json`,
+        `echo {"pre-commit":["markHookOk"],"scripts":{"markHookOk":"touch hook_run_ok"}} > package.json`,
         `echo init > commited`,
         `git init`
     ].join(` && `));
@@ -94,3 +94,30 @@ describe('regression - install.js', function () {
         ).true();
     });
 });
+
+// Git commit and trigger hook.
+describe('regression - index.js(common hook)', function () {
+    let ok = true;
+    try {
+        execSync([
+            `cd ${TESTING_DIR_NAME}`,
+            `echo foo >> commited`,
+            `git add commited`,
+            `git commit -m test`
+        ].join(` && `));
+    } catch (e) {
+        ok = false;
+    }
+
+    it('passed pre-commit hook and git commit successly', function () {
+        assume(ok).true();
+    });
+
+    it('hook really is triggered and run successly', function () {
+        assume(
+            fs.existsSync(`./${TESTING_DIR_NAME}/hook_run_ok`)
+        ).true();
+    });
+});
+
+// TODO: Remove sandbox at a reasonable moment.
