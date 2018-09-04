@@ -31,9 +31,9 @@ TODO:
                 ├── src
                 │   └── xxx
                 └── package.json
-    1) 在git仓库之外创建临时目录, 并将提前预设好的测试目录结构copy过来.
-    2) 将本模块必要的代码copy到临时目录的对应node_modules/pre-commit-enhanced目录中
-    3) 初始化git仓库
+    已完成 1) 创建临时目录, 并将提前预设好的测试目录结构copy过来.
+    已完成 2) 将本模块必要的代码copy到临时目录的对应node_modules/pre-commit-enhanced目录中
+    已完成 3) 初始化git仓库
     3) (TP) 执行install.js后, 检测hook钩子是否安装成功
     4) (TP) pre-commit配置了exit 0的命令时, 修改某个文件后, 执行git add . && git commit -m 'test'后, 查看git status状态为空
     5) (TP) 修改某个文件后, 调整pre-commit为exit 1, 执行git add . && git commit -m 'test'后, 查看git status状态不空
