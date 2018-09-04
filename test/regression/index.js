@@ -35,6 +35,7 @@ try {
         `cd ..`,
         `echo node_modules > .gitignore`,
         `echo {} > package.json`,
+        `echo init > commited`,
         `git init`
     ].join(` && `));
 } catch (e) {
