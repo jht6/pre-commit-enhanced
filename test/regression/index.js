@@ -9,6 +9,10 @@ const assume = require('assume');
 // const spawn = require('cross-spawn');
 const utils = require('../../common/utils');
 const { execSync } = require('child_process');
+const {
+    FOREACH_COMMAND_TPL,
+    FOREACH_COMMAND_KEY
+} = require('../../common/const')();
 
 const PCE_ROOT_DIR = process.cwd(); // This module's git reposition root dir path.
 const TESTING_DIR_NAME = 'sandbox';
@@ -117,6 +121,32 @@ describe('regression - index.js(common hook)', function () {
         assume(
             fs.existsSync(`./${TESTING_DIR_NAME}/hook_run_ok`)
         ).true();
+    });
+});
+
+// run "pce-install-foreach".
+describe('regression - install-foreach.js', function () {
+    let ok = true;
+    try {
+        execSync([
+            `cd ${TESTING_DIR_NAME}`,
+            `npm run pce-install-foreach`
+        ].join(` && `));
+    } catch (e) {
+        ok = false;
+    }
+
+    it('run install-foreach.js without errors', function () {
+        assume(ok).true();
+    });
+
+    it('add config about "foreach" in package.json successly', function () {
+        let json = require(`../../${TESTING_DIR_NAME}/package.json`);
+        assume(json.scripts['pce-foreach']).equals(
+            'node ./node_modules/pre-commit-enhanced/scripts/foreach.js'
+        );
+        assume(json[FOREACH_COMMAND_KEY]).equals(FOREACH_COMMAND_TPL);
+        assume(json['pre-commit']).contains('pce-foreach');
     });
 });
 
