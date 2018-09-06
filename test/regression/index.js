@@ -150,4 +150,11 @@ describe('regression - install-foreach.js', function () {
     });
 });
 
+// Git commit and trigger hook to run pce-foreach.
+// 删掉"hook_run_ok"文件
+// 修改package.json中"pce-foreach-command"内容为"echo <fliename> >> foreach_run_ok"
+// 修改俩文件, git commit触发钩子
+// 判断hook_run_ok是否存在
+// 判断foreach_run_ok是否存在, 且内容为所提交两个文件的path
+
 // TODO: Remove sandbox at a reasonable moment.
