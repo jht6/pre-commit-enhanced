@@ -1,8 +1,17 @@
 const path = require('path');
 const fs = require('fs');
 const spawn = require('cross-spawn');
-const exists = require('fs').existsSync;
+const exists = fs.existsSync;
 const { LOG_PREFIX } = require('./const')();
+
+module.exports = {
+    getPackageJsonDirPath,
+    getGitRootDirPath,
+    log,
+    getGitStatus,
+    getFilePathList,
+    modifyPackageJson
+};
 
 /**
  * Get absolute path of directory which contains the 'package.json'.
@@ -144,10 +153,46 @@ function getFilePathList(gitStatusStr, testFlag) {
     return pathList;
 }
 
-module.exports = {
-    getPackageJsonDirPath,
-    getGitRootDirPath,
-    log,
-    getGitStatus,
-    getFilePathList
-};
+/**
+ * Modify content of a package.json
+ * @param {String} absPath absolute path of a package.json
+ * @param {Function} callback A function will receive the json,
+ *      and return the json after you change it.
+ */
+function modifyPackageJson(absPath, callback) {
+    if (!exists(absPath)) {
+        return false;
+    }
+
+    let json;
+    try {
+        json = require(absPath);
+    } catch (e) {
+        json = {};
+    }
+
+    if (typeof callback === 'function') {
+        json = callback(json);
+    }
+
+    if (Object.prototype.toString.call(json) !== '[object Object]') {
+        throw Error('You must return an object in the callback.');
+    }
+
+    let indent = 2;
+    try {
+        fs.writeFileSync(
+            absPath,
+            JSON.stringify(json, null, indent) + '\n'
+        );
+    } catch (e) {
+        log([
+            `Fail: Add property related to "foreach" in package.json at ${absPath}`,
+            `Error message is:`
+        ]);
+        console.log(e);
+        process.exit(1);
+    }
+
+    return true;
+}
