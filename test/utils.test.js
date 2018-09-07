@@ -3,6 +3,7 @@
 const assume = require('assume');
 const path = require('path');
 const fs = require('fs');
+const execSync = require('child_process').execSync;
 const utils = require('../common/utils');
 
 describe('common/utils', function () {
@@ -118,6 +119,89 @@ describe('common/utils', function () {
             assume(list.length).equals(2);
             assume(list[0]).equals(path.join(gitRoot, `a.js`));
             assume(list[1]).equals(path.join(gitRoot, `b.js`));
+        });
+    });
+
+    describe('#modifyPackageJson', function () {
+        let fn = utils.modifyPackageJson;
+
+
+        it('return false if the file "absPath" points to do not exist', function () {
+            let ret = fn(path.resolve(__dirname, './not_exsit.json'));
+            assume(ret).false();
+        });
+
+        it('write "{}" to the file if the file is empty and no callback passed', function () {
+            let filename = 'tmp1.json';
+            let filepath = `./${filename}`;
+
+            execSync([
+                `cd test`,
+                `touch ${filename}`
+            ].join(` && `));
+
+            let ret = fn(path.resolve(__dirname, filepath));
+            let json = require(filepath);
+
+            assume(ret).true();
+            assume(JSON.stringify(json)).equals('{}');
+
+            execSync([
+                `cd test`,
+                `rm -f ${filename}`
+            ].join(` && `));
+        });
+
+        it('throw an exception if the callback return a non-object value', function () {
+            let filename = 'tmp2.json';
+            let filepath = `./${filename}`;
+
+            execSync([
+                `cd test`,
+                `touch ${filename}`
+            ].join(` && `));
+
+            let hasException = false;
+            try {
+                fn(
+                    path.resolve(__dirname, filepath),
+                    () => null
+                );
+            } catch (e) {
+                hasException = true;
+            }
+
+            assume(hasException).true();
+
+            execSync([
+                `cd test`,
+                `rm -f ${filename}`
+            ].join(` && `));
+        });
+
+        it('correctly save value to the file', function () {
+            let filename = 'tmp3.json';
+            let filepath = `./${filename}`;
+
+            execSync([
+                `cd test`,
+                `touch ${filename}`
+            ].join(` && `));
+
+            let absPath = path.resolve(__dirname, filepath);
+            let ret = fn(
+                absPath,
+                () => ({foo: 'iLoveTSY'})
+            );
+            let json = require(absPath);
+
+            assume(ret).true();
+            assume(json.foo).equals('iLoveTSY');
+
+            execSync([
+                `cd test`,
+                `rm -f ${filename}`
+            ].join(` && `));
         });
     });
 });
