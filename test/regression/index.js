@@ -7,7 +7,6 @@ const path = require('path');
 const os = require('os');
 const assume = require('assume');
 
-// const spawn = require('cross-spawn');
 const utils = require('../../common/utils');
 const { execSync } = require('child_process');
 const {
