@@ -141,7 +141,7 @@ describe('regression - install-foreach.js', function () {
     });
 
     it('add config about "foreach" in package.json successly', function () {
-        let json = require(`../../${TESTING_DIR_NAME}/package.json`);
+        let json = require(path.join(PCE_ROOT_DIR, `${TESTING_DIR_NAME}/package.json`));
         assume(json.scripts['pce-foreach']).equals(
             'node ./node_modules/pre-commit-enhanced/scripts/foreach.js'
         );
