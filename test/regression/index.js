@@ -4,6 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const assume = require('assume');
 
 // const spawn = require('cross-spawn');
@@ -151,11 +152,53 @@ describe('regression - install-foreach.js', function () {
 });
 
 // Git commit and trigger hook to run pce-foreach.
-// 修改package.json中"scripts"的"markHookOk"为"touch hook_run_ok_2"
-// 修改package.json中"pce-foreach-command"内容为"echo <fliename> >> foreach_run_ok"
-// 修改俩文件, git commit触发钩子
-// 判断hook_run_ok是否存在
-// 判断foreach_run_ok是否存在, 且内容为所提交两个文件的path
+describe('regression - foreach.js', function () {
+    const nameList = ['foreach_commited_0', 'foreach_commited_1'];
 
+    function prepare() {
+        utils.modifyPackageJson(
+            path.join(PCE_ROOT_DIR, `${TESTING_DIR_NAME}/package.json`),
+            json => {
+                json.scripts.markHookOk = 'touch hook_run_ok_in_foreach';
+                json['pce-foreach-command'] = 'echo <filepath> >> foreach_run_ok';
+                return json;
+            }
+        );
+
+        try {
+            execSync([
+                `cd ${TESTING_DIR_NAME}`,
+                `echo foo >> ${nameList[0]}`,
+                `echo bar >> ${nameList[1]}`,
+                `git add ${nameList[0]} ${nameList[1]}`,
+                `git commit -m test`
+            ].join(` && `));
+        } catch (e) {
+            ok = false;
+        }
+    }
+
+    let ok = true;
+
+    it('passed pre-commit hook and git commit successly', function () {
+        prepare();
+        assume(ok).true();
+    });
+
+    it('foreach.js really is triggered and run successly', function () {
+        let markFilePath = `./${TESTING_DIR_NAME}/foreach_run_ok`;
+        assume(
+            fs.existsSync(markFilePath)
+        ).true();
+
+        let pathList = fs.readFileSync(markFilePath)
+            .toString()
+            .split(os.EOL)
+            .filter(line => !!line);
+        assume(pathList.length).equals(2);
+        assume(pathList[0]).includes(nameList[0]);
+        assume(pathList[1]).includes(nameList[1]);
+    });
+});
 
 // TODO: Remove sandbox at a reasonable moment.
