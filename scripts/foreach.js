@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const spawn = require('cross-spawn');
+const { execSync } = require('child_process');
 const utils = require('../common/utils');
 
 const {
@@ -126,11 +126,12 @@ ForeachRunner.prototype.traverse = function (pathList, parsedCommand) {
     let isPassed = true;
     pathList.forEach(filePath => {
         args[paramIndex] = filePath;
-        let ret = spawn.sync(cmd, args, {
-            stdio: [0, 1, 2]
-        });
 
-        if (ret.status && isPassed) {
+        try {
+            execSync(
+                `${cmd} ${args.join(' ')}`
+            );
+        } catch (e) {
             isPassed = false;
         }
     });
