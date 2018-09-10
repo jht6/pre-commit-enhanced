@@ -79,16 +79,20 @@ try {
 // Run install.js.
 describe('regression - install.js', function () {
     let ok = true;
-    try {
-        execSync([
-            `cd ${TESTING_DIR_NAME}`,
-            `node ./node_modules/pre-commit-enhanced/install.js`
-        ].join(` && `));
-    } catch (e) {
-        ok = false;
+
+    function prepare() {
+        try {
+            execSync([
+                `cd ${TESTING_DIR_NAME}`,
+                `node ./node_modules/pre-commit-enhanced/install.js`
+            ].join(` && `));
+        } catch (e) {
+            ok = false;
+        }
     }
 
     it('run install.js without errors', function () {
+        prepare();
         assume(ok).true();
     });
 
@@ -102,18 +106,23 @@ describe('regression - install.js', function () {
 // Git commit and trigger hook.
 describe('regression - index.js(common hook)', function () {
     let ok = true;
-    try {
-        execSync([
-            `cd ${TESTING_DIR_NAME}`,
-            `echo foo >> commited`,
-            `git add commited`,
-            `git commit -m test`
-        ].join(` && `));
-    } catch (e) {
-        ok = false;
+    let commited = 'commited';
+
+    function prepare() {
+        try {
+            execSync([
+                `cd ${TESTING_DIR_NAME}`,
+                `echo foo >> ${commited}`,
+                `git add ${commited}`,
+                `git commit -m test`
+            ].join(` && `));
+        } catch (e) {
+            ok = false;
+        }
     }
 
     it('passed pre-commit hook and git commit successly', function () {
+        prepare();
         assume(ok).true();
     });
 
@@ -122,21 +131,65 @@ describe('regression - index.js(common hook)', function () {
             fs.existsSync(`./${TESTING_DIR_NAME}/hook_run_ok`)
         ).true();
     });
+
+    // it('committing will fail if the hook exit with a non-zero code', function () {
+    //     let lastJson;
+
+    //     utils.modifyPackageJson(
+    //         path.join(TESTING_DIR_PATH, 'package.json'),
+    //         json => {
+    //             lastJson = JSON.parse(JSON.stringify(json));
+    //             json.scripts.markHookFail = 'touch hook_run_fail && exit 1';
+    //             json['pre-commit'][0] = 'markHookFail';
+    //             return json;
+    //         }
+    //     );
+
+    //     let ok = true;
+
+    //     try {
+    //         execSync([
+    //             `cd ${TESTING_DIR_NAME}`,
+    //             `echo bar >> ${commited}`,
+    //             `git add ${commited}`,
+    //             `git commit -m test`
+    //         ].join(` && `));
+    //     } catch (e) {
+    //         ok = false;
+    //     }
+
+    //     assume(ok).false();
+
+    //     execSync([
+    //         `cd ${TESTING_DIR_NAME}`,
+    //         `git reset HEAD`
+    //     ].join(` && `));
+
+    //     reset package.json
+    //     utils.modifyPackageJson(
+    //         path.join(TESTING_DIR_PATH, 'package.json'),
+    //         () => lastJson
+    //     );
+    // });
 });
 
 // run "pce-install-foreach".
 describe('regression - install-foreach.js', function () {
     let ok = true;
-    try {
-        execSync([
-            `cd ${TESTING_DIR_NAME}`,
-            `npm run pce-install-foreach`
-        ].join(` && `));
-    } catch (e) {
-        ok = false;
+
+    function prepare() {
+        try {
+            execSync([
+                `cd ${TESTING_DIR_NAME}`,
+                `npm run pce-install-foreach`
+            ].join(` && `));
+        } catch (e) {
+            ok = false;
+        }
     }
 
     it('run install-foreach.js without errors', function () {
+        prepare();
         assume(ok).true();
     });
 
