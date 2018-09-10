@@ -80,7 +80,7 @@ try {
 describe('regression - install.js', function () {
     let ok = true;
 
-    function prepare() {
+    before(function () {
         try {
             execSync([
                 `cd ${TESTING_DIR_NAME}`,
@@ -89,10 +89,9 @@ describe('regression - install.js', function () {
         } catch (e) {
             ok = false;
         }
-    }
+    });
 
     it('run install.js without errors', function () {
-        prepare();
         assume(ok).true();
     });
 
@@ -108,7 +107,7 @@ describe('regression - index.js(common hook)', function () {
     let ok = true;
     let commited = 'commited';
 
-    function prepare() {
+    before(function () {
         try {
             execSync([
                 `cd ${TESTING_DIR_NAME}`,
@@ -119,10 +118,9 @@ describe('regression - index.js(common hook)', function () {
         } catch (e) {
             ok = false;
         }
-    }
+    });
 
     it('passed pre-commit hook and git commit successly', function () {
-        prepare();
         assume(ok).true();
     });
 
@@ -177,7 +175,7 @@ describe('regression - index.js(common hook)', function () {
 describe('regression - install-foreach.js', function () {
     let ok = true;
 
-    function prepare() {
+    before(function () {
         try {
             execSync([
                 `cd ${TESTING_DIR_NAME}`,
@@ -186,10 +184,9 @@ describe('regression - install-foreach.js', function () {
         } catch (e) {
             ok = false;
         }
-    }
+    });
 
     it('run install-foreach.js without errors', function () {
-        prepare();
         assume(ok).true();
     });
 
@@ -207,7 +204,7 @@ describe('regression - install-foreach.js', function () {
 describe('regression - foreach.js', function () {
     const nameList = ['foreach_commited_0', 'foreach_commited_1'];
 
-    function prepare() {
+    before(function () {
         utils.modifyPackageJson(
             path.join(PCE_ROOT_DIR, `${TESTING_DIR_NAME}/package.json`),
             json => {
@@ -228,12 +225,11 @@ describe('regression - foreach.js', function () {
         } catch (e) {
             ok = false;
         }
-    }
+    });
 
     let ok = true;
 
     it('passed pre-commit hook and git commit successly', function () {
-        prepare();
         assume(ok).true();
     });
 
