@@ -25,7 +25,6 @@ ForeachInstaller.prototype.run = function () {
     this.json = this.addForeachInScripts(this.json);
     this.json = this.addForeachInPrecommit(this.json);
     this.json = this.addForeachCommand(this.json);
-    this.json = this.addForeachCommand(this.json);
     this.writeJsonToFile(this.json);
 };
 
