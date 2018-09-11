@@ -122,11 +122,51 @@ describe('common/utils', function () {
         });
     });
 
+    describe('#readPackageJson', function () {
+        let fn = utils.readPackageJson;
+        let filename = 'tmp0.json';
+        let filepath = path.join(__dirname, filename);
+
+        it('return null if the file "absPath" points to does not exist', function () {
+            let ret = fn(
+                path.join(__dirname, './not_exsit.json')
+            );
+            assume(ret).equals(null);
+        });
+
+        it('return null if the file\'s content cannot be parsed', function () {
+            execSync([
+                `cd test`,
+                `echo foo > ${filename}`
+            ].join(` && `));
+
+            let ret = fn(filepath);
+            assume(ret).equals(null);
+        });
+
+        it('read json from a file successly', function () {
+            execSync([
+                `cd test`,
+                `echo {"name":"oj"} > ${filename}`
+            ].join(` && `));
+
+            let ret = fn(filepath);
+            assume(ret).is.a('object');
+            assume(ret.name).equals('oj');
+        });
+
+        after(function () {
+            execSync([
+                `cd test`,
+                `rm -f ${filename}`
+            ].join(` && `));
+        });
+    });
+
     describe('#modifyPackageJson', function () {
         let fn = utils.modifyPackageJson;
 
-
-        it('return false if the file "absPath" points to do not exist', function () {
+        it('return false if the file "absPath" points to does not exist', function () {
             let ret = fn(path.resolve(__dirname, './not_exsit.json'));
             assume(ret).false();
         });
