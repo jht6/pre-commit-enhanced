@@ -17,6 +17,7 @@ const {
 const PCE_ROOT_DIR = process.cwd(); // This module's git reposition root dir path.
 const TESTING_DIR_NAME = 'sandbox';
 const TESTING_DIR_PATH = path.join(PCE_ROOT_DIR, TESTING_DIR_NAME);
+const PACKAGE_JSON_PATH = path.join(TESTING_DIR_PATH, 'package.json');
 
 // If there is an exsiting "sandbox" dir, remove it.
 if (fs.existsSync(TESTING_DIR_PATH)) {
@@ -130,45 +131,53 @@ describe('regression - index.js(common hook)', function () {
         ).true();
     });
 
-    // it('committing will fail if the hook exit with a non-zero code', function () {
-    //     let lastJson;
 
-    //     utils.modifyPackageJson(
-    //         path.join(TESTING_DIR_PATH, 'package.json'),
-    //         json => {
-    //             lastJson = JSON.parse(JSON.stringify(json));
-    //             json.scripts.markHookFail = 'touch hook_run_fail && exit 1';
-    //             json['pre-commit'][0] = 'markHookFail';
-    //             return json;
-    //         }
-    //     );
+});
 
-    //     let ok = true;
+// Git commit -> trigger hook and fail.
+describe('regression - index.js(common hook fail)', function () {
+    let lastJson;
+    let ok = true;
 
-    //     try {
-    //         execSync([
-    //             `cd ${TESTING_DIR_NAME}`,
-    //             `echo bar >> ${commited}`,
-    //             `git add ${commited}`,
-    //             `git commit -m test`
-    //         ].join(` && `));
-    //     } catch (e) {
-    //         ok = false;
-    //     }
+    before(function () {
+        utils.modifyPackageJson(
+            path.join(TESTING_DIR_PATH, 'package.json'),
+            json => {
+                lastJson = JSON.parse(JSON.stringify(json));
+                json.scripts.markHookFail = 'touch hook_run_fail && exit 1';
+                json['pre-commit'][0] = 'markHookFail';
+                return json;
+            }
+        );
 
-    //     assume(ok).false();
+        try {
+            execSync([
+                `cd ${TESTING_DIR_NAME}`,
+                `echo bar >> ${commited}`,
+                `git add ${commited}`,
+                `git commit -m test`
+            ].join(` && `));
+        } catch (e) {
+            ok = false;
+        }
+    });
 
-    //     execSync([
-    //         `cd ${TESTING_DIR_NAME}`,
-    //         `git reset HEAD`
-    //     ].join(` && `));
+    it('committing will fail if the hook exit with a non-zero code', function () {
+        assume(ok).false();
+    });
 
-    //     reset package.json
-    //     utils.modifyPackageJson(
-    //         path.join(TESTING_DIR_PATH, 'package.json'),
-    //         () => lastJson
-    //     );
-    // });
+    after(function () {
+        execSync([
+            `cd ${TESTING_DIR_NAME}`,
+            `git reset HEAD`
+        ].join(` && `));
+
+        // reset package.json
+        utils.modifyPackageJson(
+            path.join(TESTING_DIR_PATH, 'package.json'),
+            () => lastJson
+        );
+    });
 });
 
 // run "pce-install-foreach".
@@ -191,7 +200,7 @@ describe('regression - install-foreach.js', function () {
     });
 
     it('add config about "foreach" in package.json successly', function () {
-        let json = require(path.join(PCE_ROOT_DIR, `${TESTING_DIR_NAME}/package.json`));
+        let json = utils.readPackageJson(PACKAGE_JSON_PATH);
         assume(json.scripts['pce-foreach']).equals(
             'node ./node_modules/pre-commit-enhanced/scripts/foreach.js'
         );
@@ -204,9 +213,11 @@ describe('regression - install-foreach.js', function () {
 describe('regression - foreach.js', function () {
     const nameList = ['foreach_commited_0', 'foreach_commited_1'];
 
+    let ok = true;
+
     before(function () {
         utils.modifyPackageJson(
-            path.join(PCE_ROOT_DIR, `${TESTING_DIR_NAME}/package.json`),
+            PACKAGE_JSON_PATH,
             json => {
                 json.scripts.markHookOk = 'touch hook_run_ok_in_foreach';
                 json['pce-foreach-command'] = 'echo <filepath> >> foreach_run_ok';
@@ -226,8 +237,6 @@ describe('regression - foreach.js', function () {
             ok = false;
         }
     });
-
-    let ok = true;
 
     it('passed pre-commit hook and git commit successly', function () {
         assume(ok).true();
