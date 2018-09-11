@@ -194,7 +194,6 @@ describe('pre-commit', function () {
                 // lines.forEach(function (line) {
                 //     assume(line).contains('\u001b');
                 // });
-
                 next();
             }, {
                 isTesting: true
