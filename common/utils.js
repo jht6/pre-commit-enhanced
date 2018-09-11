@@ -10,6 +10,7 @@ module.exports = {
     log,
     getGitStatus,
     getFilePathList,
+    readPackageJson,
     modifyPackageJson
 };
 
@@ -154,6 +155,25 @@ function getFilePathList(gitStatusStr, testFlag) {
 }
 
 /**
+ * 从指定的package.json文件中读出内容并转为数据
+ * @param {String} absPath 要读取的package.json文件的绝对路径
+ * @return {Object} parse后的数据
+ */
+function readPackageJson(absPath) {
+    let ret = null;
+
+    if (!exists(absPath)) {
+        return ret;
+    }
+
+    try {
+        ret = JSON.parse(fs.readFileSync(absPath).toString());
+    } catch (e) {/* do nothing */}
+
+    return ret;
+}
+
+/**
  * Modify content of a package.json
  * @param {String} absPath absolute path of a package.json
  * @param {Function} callback A function will receive the json,
@@ -164,10 +184,8 @@ function modifyPackageJson(absPath, callback) {
         return false;
     }
 
-    let json;
-    try {
-        json = require(absPath);
-    } catch (e) {
+    let json = readPackageJson(absPath);
+    if (!json) {
         json = {};
     }
 
