@@ -1,3 +1,7 @@
+## 1.1.3
+- Add regression testing in real environment.
+- Fix bugs.
+
 ## 1.1.2
 - Add feature: show consuming time after run scripts.
 - In foreach.js, it will execute command for all filepaths even though it has failed for some filepaths.
