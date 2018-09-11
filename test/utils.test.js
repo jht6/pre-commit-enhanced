@@ -181,7 +181,7 @@ describe('common/utils', function () {
             ].join(` && `));
 
             let ret = fn(path.resolve(__dirname, filepath));
-            let json = require(filepath);
+            let json = readPackageJson(filepath);
 
             assume(ret).true();
             assume(JSON.stringify(json)).equals('{}');
@@ -233,7 +233,7 @@ describe('common/utils', function () {
                 absPath,
                 () => ({foo: 'iLoveTSY'})
             );
-            let json = require(absPath);
+            let json = readPackageJson(absPath);
 
             assume(ret).true();
             assume(json.foo).equals('iLoveTSY');

@@ -54,7 +54,7 @@ ForeachRunner.prototype.getCommandFromPackageJson = function () {
     let json = null,
         command = '';
     try {
-        json = require(path.join(
+        json = utils.readPackageJson(path.join(
             utils.getPackageJsonDirPath(),
             'package.json'
         ));

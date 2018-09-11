@@ -38,7 +38,7 @@ ForeachInstaller.prototype.init = function () {
     }
 
     try {
-        this.json = require(this.packageJsonPath);
+        this.json = utils.readPackageJson(this.packageJsonPath);
     } catch (e) {
         utils.log([
             `Fail: Require json from package.json at ${this.packageJsonPath}`,
