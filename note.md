@@ -6,9 +6,16 @@ TODO:
     2) 判断路径是否符合自定义的限定规则, 不符合规则的路径过滤掉, 从而不进行处理
     3) 使用支持多参数的命令处理路径列表, 例如"eslint path1 path2"
 
+    一个使用eslint的完整场景为:
+    0) 首先执行"npm run pce-install-batch", 自动在pre-commit数组中增加"pce-batch", 而scripts中"pce-batch"为"node ./pce-batch.js"
+    1) git commit
+    2) 触发pre-commit钩子, 调用"pce-batch", 继而执行pce-batch.js
+    3) 拿到commit的文件列表, 转为字符串
+    4) 拼凑成形如"eslint path1 path2"的命令, 使用child_process.execSync执行
+
 
 3. other
-    已完成..1) 获取提交文件列表的功能抽出到common作为公共函数, 相应的单元测试也需要转移
+    已完成  1) 获取提交文件列表的功能抽出到common作为公共函数, 相应的单元测试也需要转移
     2) 安装本包时, 需在package.json中添加install-pce-batch, 功能是将scripts/pce-batch.js复制到package.json所在目录, 同时自动在pre-commit和scripts中添加相应的命令
     3) pce-batch.js中有关功能的标志位都提到顶部, 方便使用者自行配置
 
@@ -31,14 +38,6 @@ TODO:
                 ├── src
                 │   └── xxx
                 └── package.json
-    已完成 1) 创建临时目录, 并将提前预设好的测试目录结构copy过来.
-    已完成 2) 将本模块必要的代码copy到临时目录的对应node_modules/pre-commit-enhanced目录中
-    已完成 3) 初始化git仓库
-    已完成 4) (TP) 执行install.js后, 检测hook钩子是否安装成功
-    已完成 5) (TP) pre-commit配置了exit 0的命令时, 修改某个文件后, 执行git add . && git commit -m 'test'后, 查看git status状态为空
-    6) (TP) 修改某个文件后, 调整pre-commit为exit 1, 执行git add . && git commit -m 'test'后, 查看git status状态不空
-    7) 清除git status
-    已完成 8) (TP) 执行npm run pce-install-foreach, 检测package.json中的pre-commit和scripts中是否有应有的内容
-    已完成 9) (TP) pre-commit配置pce-foreach为exit 0后, 执行git add . && git commit -m 'test'后, 查看git status状态为空
-    10) (TP) 修改某个文件后, 调整pce-foreach为exit 1, 执行git add . && git commit -m 'test'后, 查看git status状态不空
+    
+    普通场景的已完成, 复杂场景的后面处理.
 
