@@ -129,7 +129,7 @@ if (!exists(packageJsonPath)) {
     return;
 }
 
-let json = require(packageJsonPath);
+let json = utils.readPackageJson(packageJsonPath);
 if (!json) {
     json = {};
 }
@@ -142,14 +142,21 @@ json.scripts['pce-install-foreach'] = [
     './node_modules/pre-commit-enhanced/scripts/install-foreach.js'
 ].join('');
 
+json.scripts['pce-install-batch'] = [
+    'node ',
+    './node_modules/pre-commit-enhanced/scripts/install-batch.js'
+].join('');
+
 const spaceCount = 2;
 try {
     fs.writeFileSync(packageJsonPath, JSON.stringify(json, null, spaceCount) + '\n');
     console.error('pre-commit:');
     console.error('pre-commit: Success: Add "pce-install-foreach" scripts in package.json at ' + packageJsonPath);
+    console.error('pre-commit: Success: Add "pce-install-batch" scripts in package.json at ' + packageJsonPath);
     console.error('pre-commit:');
 } catch (e) {
     console.error('pre-commit:');
     console.error('pre-commit: Fail: Add "pce-install-foreach" scripts in package.json at ' + packageJsonPath);
+    console.error('pre-commit: Fail: Add "pce-install-batch" scripts in package.json at ' + packageJsonPath);
     console.error('pre-commit:');
 }
