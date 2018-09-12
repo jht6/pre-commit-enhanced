@@ -163,7 +163,7 @@ function readPackageJson(absPath) {
     let ret = null;
 
     if (!exists(absPath)) {
-        return ret;
+        throw Error(`${absPath} doesn't exist!`);
     }
 
     try {
