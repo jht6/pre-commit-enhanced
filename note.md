@@ -42,7 +42,7 @@ TODO:
     普通场景的已完成, 复杂场景的后面处理.
 
 5. install-batch.js的所需执行的过程和install-foreach的几乎完全一样.
-    1. 要先调整common内的结构
+    已完成  1. 要先调整common内的结构
     2. 将install-foreach内的方法抽出作为公共函数, 并重构install-foreach
 
 
