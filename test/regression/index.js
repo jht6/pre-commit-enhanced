@@ -258,4 +258,9 @@ describe('regression - foreach.js', function () {
     });
 });
 
-// TODO: Remove sandbox at a reasonable moment.
+// Just to remove temporary testing dir
+describe('regression - finish testing', function () {
+    it(`remove ${TESTING_DIR_NAME} after testing ends`, function () {
+        execSync(`rm -rf ${TESTING_DIR_NAME}`);
+    });
+});
