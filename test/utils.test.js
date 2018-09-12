@@ -127,11 +127,17 @@ describe('common/utils', function () {
         let filename = 'tmp0.json';
         let filepath = path.join(__dirname, filename);
 
-        it('return null if the file "absPath" points to does not exist', function () {
-            let ret = fn(
-                path.join(__dirname, './not_exsit.json')
-            );
-            assume(ret).equals(null);
+        it('throw an exception if the file "absPath" points to does not exist', function () {
+            let hasException = false;
+            try {
+                fn(
+                    path.join(__dirname, './not_exsit.json')
+                );
+            } catch (e) {
+                hasException = true;
+            }
+
+            assume(hasException).true();
         });
 
         it('return null if the file\'s content cannot be parsed', function () {
