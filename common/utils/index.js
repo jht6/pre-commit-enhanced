@@ -6,6 +6,7 @@ const getGitStatus = require('./getGitStatus');
 const getFilePathList = require('./getFilePathList');
 const readPackageJson = require('./readPackageJson');
 const modifyPackageJson = require('./modifyPackageJson');
+const addPreCommitItem = require('./addPreCommitItem');
 
 module.exports = {
     getPackageJsonDirPath,
@@ -14,7 +15,8 @@ module.exports = {
     getGitStatus,
     getFilePathList,
     readPackageJson,
-    modifyPackageJson
+    modifyPackageJson,
+    addPreCommitItem
 };
 
 /**
