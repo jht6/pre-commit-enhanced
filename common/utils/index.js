@@ -29,7 +29,3 @@ module.exports = {
 function getPackageJsonDirPath() {
     return path.resolve(__dirname, '..', '..', '..', '..');
 }
-
-
-
-
