@@ -23,7 +23,7 @@ function ForeachInstaller() {
 ForeachInstaller.prototype.run = function () {
     this.init();
     this.json = this.addForeachInScripts(this.json);
-    this.json = this.addForeachInPrecommit(this.json);
+    this.json = utils.addPreCommitItem(this.json, SCRIPT_PCE_FOREACH);
     this.json = this.addForeachCommand(this.json);
     this.writeJsonToFile(this.json);
 };
@@ -61,47 +61,6 @@ ForeachInstaller.prototype.addForeachInScripts = function (json) {
         'node ',
         './node_modules/pre-commit-enhanced/scripts/foreach.js'
     ].join('');
-
-    return json;
-};
-
-ForeachInstaller.prototype.addForeachInPrecommit = function (json) {
-    let preCommitKey,
-        preCommit;
-    if (json['pre-commit']) {
-        preCommitKey = 'pre-commit';
-        preCommit = json[preCommitKey];
-    } else if (json['precommit']) {
-        preCommitKey = 'precommit';
-        preCommit = json[preCommitKey];
-    } else {
-        preCommitKey = 'pre-commit';
-        preCommit = null;
-    }
-
-    if (!preCommit) { // no "pre-commit" or "precommit" config now
-        json[preCommitKey] = [SCRIPT_PCE_FOREACH];
-    } else if (Object.prototype.toString.call(preCommit) === '[object Object]') {
-        if (Array.isArray(json[preCommitKey].run)) { // for format of {run: ["a", "b", "c"]}
-            json[preCommitKey].run.push(SCRIPT_PCE_FOREACH);
-        } else if (typeof json[preCommitKey].run === 'string') { // for format of {run: "a, b, c"}
-            json[preCommitKey].run = preCommit.run
-                .split(/[, ]+/)
-                .filter(cmd => !!cmd)
-                .concat(SCRIPT_PCE_FOREACH)
-                .join(', ');
-        } else {
-            json[preCommitKey].run = [SCRIPT_PCE_FOREACH];
-        }
-    } else if (typeof preCommit === 'string') { // for format of "a, b, c"
-        json[preCommitKey] = preCommit
-            .split(/[, ]+/)
-            .filter(cmd => !!cmd)
-            .concat(SCRIPT_PCE_FOREACH)
-            .join(', ');
-    } else if (Array.isArray(preCommit)) { // for format of ["a, b, c"]
-        json[preCommitKey].push(SCRIPT_PCE_FOREACH);
-    }
 
     return json;
 };
