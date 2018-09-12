@@ -101,6 +101,18 @@ describe('regression - install.js', function () {
             fs.existsSync(`./${TESTING_DIR_NAME}/.git/hooks/pre-commit`)
         ).true();
     });
+
+    it('add config in package.json correctly', function () {
+        let json = utils.readPackageJson(PACKAGE_JSON_PATH);
+        assume(json).is.a('object');
+        assume(json.scripts).is.a('object');
+        assume(json.scripts['pce-install-foreach']).equals(
+            'node ./node_modules/pre-commit-enhanced/scripts/install-foreach.js'
+        );
+        assume(json.scripts['pce-install-batch']).equals(
+            'node ./node_modules/pre-commit-enhanced/scripts/install-batch.js'
+        );
+    });
 });
 
 // Git commit and trigger hook.
