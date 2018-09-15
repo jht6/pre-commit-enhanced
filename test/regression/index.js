@@ -11,7 +11,8 @@ const utils = require('../../common/utils');
 const { execSync } = require('child_process');
 const {
     FOREACH_COMMAND_TPL,
-    FOREACH_COMMAND_KEY
+    FOREACH_COMMAND_KEY,
+    FOREACH_SCRIPT
 } = require('../../common/const')();
 
 const PCE_ROOT_DIR = process.cwd(); // This module's git reposition root dir path.
@@ -213,9 +214,7 @@ describe('regression - install-foreach.js', function () {
 
     it('add config about "foreach" in package.json successly', function () {
         let json = utils.readPackageJson(PACKAGE_JSON_PATH);
-        assume(json.scripts['pce-foreach']).equals(
-            'node ./node_modules/pre-commit-enhanced/scripts/foreach.js'
-        );
+        assume(json.scripts['pce-foreach']).equals(FOREACH_SCRIPT);
         assume(json[FOREACH_COMMAND_KEY]).equals(FOREACH_COMMAND_TPL);
         assume(json['pre-commit']).contains('pce-foreach');
     });

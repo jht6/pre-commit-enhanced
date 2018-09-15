@@ -8,7 +8,8 @@ const utils = require('../common/utils');
 const SCRIPT_PCE_FOREACH = 'pce-foreach';
 const {
     FOREACH_COMMAND_TPL,
-    FOREACH_COMMAND_KEY
+    FOREACH_COMMAND_KEY,
+    FOREACH_SCRIPT
 } = require('../common/const')();
 
 function ForeachInstaller() {
@@ -57,10 +58,7 @@ ForeachInstaller.prototype.init = function () {
 };
 
 ForeachInstaller.prototype.addForeachInScripts = function (json) {
-    json.scripts[SCRIPT_PCE_FOREACH] = [
-        'node ',
-        './node_modules/pre-commit-enhanced/scripts/foreach.js'
-    ].join('');
+    json.scripts[SCRIPT_PCE_FOREACH] = FOREACH_SCRIPT;
 
     return json;
 };
