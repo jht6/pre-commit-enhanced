@@ -12,6 +12,7 @@ const { execSync } = require('child_process');
 const {
     FOREACH_COMMAND_TPL,
     FOREACH_COMMAND_KEY,
+    FOREACH_NAME,
     FOREACH_SCRIPT,
     BATCH_NAME,
     BATCH_SCRIPT
@@ -216,9 +217,9 @@ describe('regression - install-foreach.js', function () {
 
     it('add config about "foreach" in package.json successly', function () {
         let json = utils.readPackageJson(PACKAGE_JSON_PATH);
-        assume(json.scripts['pce-foreach']).equals(FOREACH_SCRIPT);
+        assume(json.scripts[FOREACH_NAME]).equals(FOREACH_SCRIPT);
         assume(json[FOREACH_COMMAND_KEY]).equals(FOREACH_COMMAND_TPL);
-        assume(json['pre-commit']).contains('pce-foreach');
+        assume(json['pre-commit']).contains(FOREACH_NAME);
     });
 });
 
@@ -233,7 +234,7 @@ describe('regression - foreach.js', function () {
             PACKAGE_JSON_PATH,
             json => {
                 json.scripts.markHookOk = 'touch hook_run_ok_in_foreach';
-                json['pce-foreach-command'] = 'echo <filepath> >> foreach_run_ok';
+                json[FOREACH_COMMAND_KEY] = 'echo <filepath> >> foreach_run_ok';
                 return json;
             }
         );

@@ -5,7 +5,8 @@ const Installer = require('../scripts/install-foreach');
 
 const {
     FOREACH_COMMAND_TPL,
-    FOREACH_COMMAND_KEY
+    FOREACH_COMMAND_KEY,
+    FOREACH_NAME
 } = require('../common/const')();
 
 describe('install-foreach', function () {
@@ -21,12 +22,12 @@ describe('install-foreach', function () {
     });
 
     describe('#addForeachInScripts', function () {
-        it('correctly add "pce-foreach" in "scripts" of json', function () {
+        it(`correctly add "${FOREACH_NAME}" in "scripts" of json`, function () {
             let installer = new Installer();
             let json = installer.addForeachInScripts({
                 scripts: {}
             });
-            let pceForeach = json.scripts['pce-foreach'];
+            let pceForeach = json.scripts[FOREACH_NAME];
             assume(pceForeach).is.a('string');
             assume(pceForeach).is.ok();
             assume(pceForeach).startWith('node ');

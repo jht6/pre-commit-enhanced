@@ -96,7 +96,7 @@ ForeachRunner.prototype.parseCommand = function (command) {
             return null;
         } else {
             utils.log([
-                `Your "pce-foreach-command" value is "${command}"`,
+                `Your "${FOREACH_COMMAND_KEY}" value is "${command}"`,
                 `It's format is incorrect, please modify it in package.json. For example:`,
                 `"echo ${FOREACH_COMMAND_PARAM}"`
             ], 1);

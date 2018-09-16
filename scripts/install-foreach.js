@@ -5,11 +5,11 @@ const path = require('path');
 const exists = fs.existsSync;
 const utils = require('../common/utils');
 
-const SCRIPT_PCE_FOREACH = 'pce-foreach';
 const {
     FOREACH_COMMAND_TPL,
     FOREACH_COMMAND_KEY,
-    FOREACH_SCRIPT
+    FOREACH_SCRIPT,
+    FOREACH_NAME
 } = require('../common/const')();
 
 function ForeachInstaller() {
@@ -24,7 +24,7 @@ function ForeachInstaller() {
 ForeachInstaller.prototype.run = function () {
     this.init();
     this.json = this.addForeachInScripts(this.json);
-    this.json = utils.addPreCommitItem(this.json, SCRIPT_PCE_FOREACH);
+    this.json = utils.addPreCommitItem(this.json, FOREACH_NAME);
     this.json = this.addForeachCommand(this.json);
     this.writeJsonToFile(this.json);
 };
@@ -58,7 +58,7 @@ ForeachInstaller.prototype.init = function () {
 };
 
 ForeachInstaller.prototype.addForeachInScripts = function (json) {
-    json.scripts[SCRIPT_PCE_FOREACH] = FOREACH_SCRIPT;
+    json.scripts[FOREACH_NAME] = FOREACH_SCRIPT;
 
     return json;
 };
@@ -75,8 +75,8 @@ ForeachInstaller.prototype.writeJsonToFile = function (json) {
             () => json
         );
         utils.log([
-            `Success: Add "${SCRIPT_PCE_FOREACH}" in "scripts" of package.json`,
-            `Success: Add "${SCRIPT_PCE_FOREACH}" in "pre-commit" of package.json`,
+            `Success: Add "${FOREACH_NAME}" in "scripts" of package.json`,
+            `Success: Add "${FOREACH_NAME}" in "pre-commit" of package.json`,
             `Success: Add "${FOREACH_COMMAND_KEY}" in package.json`,
             `    at ${this.packageJsonPath}`
         ]);
