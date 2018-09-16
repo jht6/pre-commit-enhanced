@@ -5,5 +5,8 @@ module.exports = () => ({
     FOREACH_COMMAND_TPL: `command-name ${FOREACH_COMMAND_PARAM}`,
     FOREACH_COMMAND_PARAM,
     FOREACH_SCRIPT: 'node ./node_modules/pre-commit-enhanced/scripts/foreach.js',
+
+    BATCH_NAME: 'pce-batch',
+    BATCH_SCRIPT: 'node ./pce-batch.js',
     LOG_PREFIX: 'pre-commit:'
 });
