@@ -25,7 +25,7 @@ BatchInstaller.prototype.run = function () {
     this.json = this.addBatchInScripts(this.json);
     this.json = utils.addPreCommitItem(this.json, BATCH_NAME);
     this.writeJsonToFile(this.json);
-    this.moveBatchToPkgJsonDir();
+    this.copyBatchToPkgJsonDir();
 };
 
 BatchInstaller.prototype.init = function () {
@@ -82,7 +82,7 @@ BatchInstaller.prototype.writeJsonToFile = function (json) {
     }
 };
 
-BatchInstaller.prototype.moveBatchToPkgJsonDir = function () {
+BatchInstaller.prototype.copyBatchToPkgJsonDir = function () {
     execSync(`cp ./node_modules/pre-commit-enhanced/scripts/batch.js ./pce-batch.js`);
 };
 
