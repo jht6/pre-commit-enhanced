@@ -305,8 +305,11 @@ describe('regression - install-batch.js', function () {
 });
 
 // Just to remove temporary testing dir
-describe('regression - finish testing', function () {
-    it(`remove ${TESTING_DIR_NAME} after testing ends`, function () {
-        execSync(`rm -rf ${TESTING_DIR_NAME}`);
+if (process.argv.indexOf('--not-delete-sandbox') === -1) {
+    describe('regression - finish testing', function () {
+        it(`remove ${TESTING_DIR_NAME} after testing ends`, function () {
+            execSync(`rm -rf ${TESTING_DIR_NAME}`);
+        });
     });
-});
+}
+
