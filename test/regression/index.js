@@ -12,7 +12,9 @@ const { execSync } = require('child_process');
 const {
     FOREACH_COMMAND_TPL,
     FOREACH_COMMAND_KEY,
-    FOREACH_SCRIPT
+    FOREACH_SCRIPT,
+    BATCH_NAME,
+    BATCH_SCRIPT
 } = require('../../common/const')();
 
 const PCE_ROOT_DIR = process.cwd(); // This module's git reposition root dir path.
@@ -266,6 +268,38 @@ describe('regression - foreach.js', function () {
         assume(pathList.length).equals(2);
         assume(pathList[0]).includes(nameList[0]);
         assume(pathList[1]).includes(nameList[1]);
+    });
+});
+
+// Install batch
+describe('regression - install-batch.js', function () {
+    let ok = true;
+
+    before(function () {
+        try {
+            execSync([
+                `cd ${TESTING_DIR_NAME}`,
+                `npm run pce-install-batch`
+            ].join(` && `));
+        } catch (e) {
+            ok = false;
+        }
+    });
+
+    it('run install-batch.js without errors', function () {
+        assume(ok).true();
+    });
+
+    it('add config about "batch" in package.json successly', function () {
+        let json = utils.readPackageJson(PACKAGE_JSON_PATH);
+        assume(json.scripts[BATCH_NAME]).equals(BATCH_SCRIPT);
+        assume(json['pre-commit']).contains(BATCH_NAME);
+    });
+
+    it('copy "batch.js" to "package.json"\'s dir and rename it to "pce-batch.js"', function () {
+        assume(
+            fs.existsSync(`./${TESTING_DIR_NAME}/pce-batch.js`)
+        ).true();
     });
 });
 
