@@ -13,13 +13,7 @@ TODO:
     3) 拿到commit的文件列表, 转为字符串
     4) 拼凑成形如"eslint path1 path2"的命令, 使用child_process.execSync执行
 
-
-3. other
-    已完成  1) 获取提交文件列表的功能抽出到common作为公共函数, 相应的单元测试也需要转移
-    2) 安装本包时, 需在package.json中添加install-pce-batch, 功能是将scripts/pce-batch.js复制到package.json所在目录, 同时自动在pre-commit和scripts中添加相应的命令
-    3) pce-batch.js中有关功能的标志位都提到顶部, 方便使用者自行配置
-
-4. 完整场景的回归测试:
+3. 完整场景的回归测试:
     0) 提前预设好测试的目录结构(含.gitignore, package.json), 主要含两种:
         一是: 普通场景, 即单纯的前端项目, package.json就在git仓库根目录
         .
@@ -41,8 +35,5 @@ TODO:
     
     普通场景的已完成, 复杂场景的后面处理.
 
-5. install-batch.js的所需执行的过程和install-foreach的几乎完全一样.
-    已完成  1. 要先调整common内的结构
-    已完成  2. 将install-foreach内的方法抽出作为公共函数, 并重构install-foreach
 
 
