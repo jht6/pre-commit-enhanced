@@ -8,6 +8,6 @@ module.exports = () => ({
     FOREACH_SCRIPT: 'node ./node_modules/pre-commit-enhanced/scripts/foreach.js',
 
     BATCH_NAME: 'pce-batch',
-    BATCH_SCRIPT: 'node ./pce-batch.js',
+    BATCH_SCRIPT: 'node ./node_modules/pre-commit-enhanced/scripts/batch.js',
     LOG_PREFIX: 'pre-commit:'
 });
