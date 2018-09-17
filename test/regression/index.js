@@ -297,9 +297,9 @@ describe('regression - install-batch.js', function () {
         assume(json['pre-commit']).contains(BATCH_NAME);
     });
 
-    it('copy "batch.js" to "package.json"\'s dir and rename it to "pce-batch.js"', function () {
+    it('copy "batch-callback.js" to "package.json"\'s dir and rename it to "pce-batch-callback.js"', function () {
         assume(
-            fs.existsSync(`./${TESTING_DIR_NAME}/pce-batch.js`)
+            fs.existsSync(`./${TESTING_DIR_NAME}/pce-batch-callback.js`)
         ).true();
     });
 });
