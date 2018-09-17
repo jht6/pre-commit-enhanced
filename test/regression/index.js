@@ -157,7 +157,7 @@ describe('regression - index.js(common hook fail)', function () {
 
     before(function () {
         utils.modifyPackageJson(
-            path.join(TESTING_DIR_PATH, 'package.json'),
+            PACKAGE_JSON_PATH,
             json => {
                 lastJson = JSON.parse(JSON.stringify(json));
                 json.scripts.markHookFail = 'touch hook_run_fail && exit 1';
@@ -190,7 +190,7 @@ describe('regression - index.js(common hook fail)', function () {
 
         // reset package.json
         utils.modifyPackageJson(
-            path.join(TESTING_DIR_PATH, 'package.json'),
+            PACKAGE_JSON_PATH,
             () => lastJson
         );
     });
@@ -304,7 +304,31 @@ describe('regression - install-batch.js', function () {
     });
 });
 
+// Git commit and trigger hook to run pce-batch.
+describe('regression - pce-batch.js', function () {
+
+    before(function () {
+        utils.modifyPackageJson(
+            PACKAGE_JSON_PATH,
+            json => {
+                json['pre-commit'] = [BATCH_NAME];
+                return json;
+            }
+        );
+    });
+
+    // TODO: remove this user case
+    it('just a placeholder', function () {
+        assume(
+            utils.readPackageJson(PACKAGE_JSON_PATH)['pre-commit'][0]
+        ).equals(BATCH_NAME);
+    });
+
+    // TODO: pce-batch's user case
+});
+
 // Just to remove temporary testing dir
+// This code should be always the bottom
 if (process.argv.indexOf('--not-delete-sandbox') === -1) {
     describe('regression - finish testing', function () {
         it(`remove ${TESTING_DIR_NAME} after testing ends`, function () {
