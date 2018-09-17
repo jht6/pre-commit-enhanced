@@ -2,16 +2,12 @@ TODO:
 
 1. 增加对运行命令的计时功能, 输出内容包括: 各命令所用时间, 所有命令消耗的总时间 (index.js中已支持, foreach中尚未支持))
 2. 对所提交的文件路径集合进行处理的代码模板pce-batch.js, 提供可编程支持, 能够灵活处理所有场景
-    1) 所有要提交的文件路径组成路径列表, 在pce-batch.js可通过标志位控制处理绝对路径还是相对路径
-    2) 判断路径是否符合自定义的限定规则, 不符合规则的路径过滤掉, 从而不进行处理
-    3) 使用支持多参数的命令处理路径列表, 例如"eslint path1 path2"
-
     一个使用eslint的完整场景为:
-    0) 首先执行"npm run pce-install-batch", 自动在pre-commit数组中增加"pce-batch", 而scripts中"pce-batch"为"node ./pce-batch.js"
     1) git commit
     2) 触发pre-commit钩子, 调用"pce-batch", 继而执行pce-batch.js
-    3) 拿到commit的文件列表, 转为字符串
-    4) 拼凑成形如"eslint path1 path2"的命令, 使用child_process.execSync执行
+    3) 拿到commit的文件列表
+    4) 过滤, 只js文件
+    5) 拼凑成形如"eslint path1 path2"的命令, 使用child_process.execSync执行
 
 3. 完整场景的回归测试:
     0) 提前预设好测试的目录结构(含.gitignore, package.json), 主要含两种:

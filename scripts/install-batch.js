@@ -83,7 +83,7 @@ BatchInstaller.prototype.writeJsonToFile = function (json) {
 };
 
 BatchInstaller.prototype.copyBatchToPkgJsonDir = function () {
-    execSync(`cp ./node_modules/pre-commit-enhanced/scripts/batch.js ./pce-batch.js`);
+    execSync(`cp ./node_modules/pre-commit-enhanced/scripts/batch-callback.js ./pce-batch-callback.js`);
 };
 
 // Expose the Hook instance so we can use it for testing purposes.
