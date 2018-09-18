@@ -10,8 +10,8 @@
     "install": "node install.js",
     "lint": "eslint .",
     "test": "mocha --recursive --timeout 60000",
-    "rtest": "./node_modules/.bin/mocha ./test/regression/index.js --timeout 60000",
-    "rtest-nd": "./node_modules/.bin/mocha ./test/regression/index.js --timeout 60000 --not-delete-sandbox",
+    "rt": "./node_modules/.bin/mocha ./test/regression/index.js --timeout 60000",
+    "rt-s": "./node_modules/.bin/mocha ./test/regression/index.js --timeout 60000 --not-delete-sandbox",
     "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- test.js",
     "uninstall": "node uninstall.js",
     "pce-install-foreach": "node ./node_modules/pre-commit-enhanced/scripts/install-foreach.js"
