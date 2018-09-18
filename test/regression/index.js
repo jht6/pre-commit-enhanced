@@ -306,8 +306,10 @@ describe('regression - install-batch.js', function () {
 
 // Git commit and trigger hook to run pce-batch.
 describe('regression - pce-batch.js', function () {
+    let ok = true;
 
     before(function () {
+        // only remain "pce-batch" in "pre-commit" array
         utils.modifyPackageJson(
             PACKAGE_JSON_PATH,
             json => {
@@ -315,17 +317,49 @@ describe('regression - pce-batch.js', function () {
                 return json;
             }
         );
+
+        // git commit all files and do not trigger pre-commit hook
+        execSync([
+            `cd ${TESTING_DIR_NAME}`,
+            `git add .`,
+            `git commit -m 'test' -n`
+        ].join(` && `));
+
+        // git commit, trigger pre-commit hook and run batch.js
+        try {
+            execSync([
+                `cd ${TESTING_DIR_NAME}`,
+                `touch batch_1.js batch_2.js batch_3.js`,
+                `git add .`,
+                `git commit -m 'test-batch'`
+            ].join(` && `));
+        } catch (e) {
+            ok = false;
+        }
     });
 
-    // TODO: remove this user case
-    it('just a placeholder', function () {
+    it('passed pre-commit hook and git commit successly', function () {
+        assume(ok).true();
+    });
+
+    it('batch.js really is triggered and run successly', function () {
+        let markFilePath = `./${TESTING_DIR_NAME}/batch_run_ok`;
         assume(
-            utils.readPackageJson(PACKAGE_JSON_PATH)['pre-commit'][0]
-        ).equals(BATCH_NAME);
-    });
+            fs.existsSync(markFilePath)
+        ).true();
 
-    // TODO: pce-batch's user case
+        let pathList = fs.readFileSync(markFilePath)
+            .toString()
+            .split(' ')
+            .filter(item => !!item && item !== os.EOL);
+        assume(pathList.length).equals(3);
+        assume(pathList).includes('./batch_1.js');
+        assume(pathList).includes('./batch_2.js');
+        assume(pathList).includes('./batch_3.js');
+    });
 });
+
+// TODO: batch.js执行失败的用例
 
 // Just to remove temporary testing dir
 // This code should be always the bottom
