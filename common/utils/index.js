@@ -7,6 +7,7 @@ const getFilePathList = require('./getFilePathList');
 const readPackageJson = require('./readPackageJson');
 const modifyPackageJson = require('./modifyPackageJson');
 const addPreCommitItem = require('./addPreCommitItem');
+const transPathWinToUnix = require('./transPathWinToUnix');
 
 module.exports = {
     getPackageJsonDirPath,
@@ -16,7 +17,8 @@ module.exports = {
     getFilePathList,
     readPackageJson,
     modifyPackageJson,
-    addPreCommitItem
+    addPreCommitItem,
+    transPathWinToUnix
 };
 
 /**
