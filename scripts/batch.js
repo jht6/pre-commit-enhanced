@@ -1,8 +1,9 @@
 'use strict';
 
 const { execSync } = require('child_process');
+const path = require('path');
+const fs = require('fs');
 
-const callbacks = require('./batch-callback');
 const {
     getGitStatus,
     getFilePathList,
@@ -10,6 +11,18 @@ const {
     transPathWinToUnix,
     log
 } = require('../common/utils/index');
+
+const callbackPath = path.join(
+    path.resolve(__dirname, '../../..'),
+    'pce-batch-callback.js'
+);
+
+let callbacks;
+if (fs.existsSync(callbackPath)) {
+    callbacks = require(callbackPath);
+} else {
+    log('Can\'n find "pce-batch-callback.js", skip hook.', 0);
+}
 
 const PKG_JSON_DIR_PATH_UNIX = transPathWinToUnix(getPackageJsonDirPath());
 
