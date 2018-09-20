@@ -322,7 +322,7 @@ describe('regression - pce-batch.js', function () {
         execSync([
             `cd ${TESTING_DIR_NAME}`,
             `git add .`,
-            `git commit -m 'test' -n`
+            `git commit -m test -n`
         ].join(` && `));
 
         // git commit, trigger pre-commit hook and run batch.js
@@ -331,7 +331,7 @@ describe('regression - pce-batch.js', function () {
                 `cd ${TESTING_DIR_NAME}`,
                 `touch batch_1.js batch_2.js batch_3.js`,
                 `git add .`,
-                `git commit -m 'test-batch'`
+                `git commit -m test-batch`
             ].join(` && `));
         } catch (e) {
             ok = false;
