@@ -1,7 +1,7 @@
 const assume = require('assume');
-const { addPreCommitItem } = require('../../common/utils');
+const { addPreCommitItem } = require('../../../common/utils');
 
-const { FOREACH_NAME } = require('../../common/const')();
+const { FOREACH_NAME } = require('../../../common/const')();
 
 describe('#addPreCommitItem', function () {
 

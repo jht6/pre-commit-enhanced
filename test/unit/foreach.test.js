@@ -1,7 +1,7 @@
 'use strict';
 
 const assume = require('assume');
-const ForeachRunner = require('../scripts/foreach');
+const ForeachRunner = require('../../scripts/foreach');
 
 describe('foreach', function () {
 

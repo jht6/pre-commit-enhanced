@@ -1,13 +1,13 @@
 'use strict';
 
 const assume = require('assume');
-const Installer = require('../scripts/install-foreach');
+const Installer = require('../../scripts/install-foreach');
 
 const {
     FOREACH_COMMAND_TPL,
     FOREACH_COMMAND_KEY,
     FOREACH_NAME
-} = require('../common/const')();
+} = require('../../common/const')();
 
 describe('install-foreach', function () {
 

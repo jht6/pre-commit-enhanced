@@ -1,5 +1,5 @@
 const assume = require('assume');
-const { transPathWinToUnix } = require('../../common/utils');
+const { transPathWinToUnix } = require('../../../common/utils');
 
 describe('#transPathWinToUnix', function () {
     it(`".\\\\a\\\\b" -> "./a/b"`, function () {

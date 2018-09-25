@@ -4,7 +4,7 @@ const assume = require('assume');
 const path = require('path');
 const fs = require('fs');
 const execSync = require('child_process').execSync;
-const utils = require('../common/utils');
+const utils = require('../../common/utils');
 
 describe('common/utils', function () {
 
@@ -17,7 +17,7 @@ describe('common/utils', function () {
             let dotGitPath = path.join(gitRootPath, '.git');
             assume(fs.lstatSync(dotGitPath).isDirectory()).true();
 
-            let myPath = path.join(gitRootPath, 'test/utils.test.js');
+            let myPath = path.join(gitRootPath, 'test/unit/utils.test.js');
             assume(fs.existsSync(myPath)).true();
         });
 
@@ -143,6 +143,7 @@ describe('common/utils', function () {
         it('return null if the file\'s content cannot be parsed', function () {
             execSync([
                 `cd test`,
+                `cd unit`,
                 `echo foo > ${filename}`
             ].join(` && `));
 
@@ -153,6 +154,7 @@ describe('common/utils', function () {
         it('read json from a file successly', function () {
             execSync([
                 `cd test`,
+                `cd unit`,
                 `echo {"name":"oj"} > ${filename}`
             ].join(` && `));
 
@@ -164,6 +166,7 @@ describe('common/utils', function () {
         after(function () {
             execSync([
                 `cd test`,
+                `cd unit`,
                 `rm -f ${filename}`
             ].join(` && `));
         });
@@ -183,6 +186,7 @@ describe('common/utils', function () {
 
             execSync([
                 `cd test`,
+                `cd unit`,
                 `touch ${filename}`
             ].join(` && `));
 
@@ -194,6 +198,7 @@ describe('common/utils', function () {
 
             execSync([
                 `cd test`,
+                `cd unit`,
                 `rm -f ${filename}`
             ].join(` && `));
         });
@@ -204,6 +209,7 @@ describe('common/utils', function () {
 
             execSync([
                 `cd test`,
+                `cd unit`,
                 `touch ${filename}`
             ].join(` && `));
 
@@ -221,6 +227,7 @@ describe('common/utils', function () {
 
             execSync([
                 `cd test`,
+                `cd unit`,
                 `rm -f ${filename}`
             ].join(` && `));
         });
@@ -231,6 +238,7 @@ describe('common/utils', function () {
 
             execSync([
                 `cd test`,
+                `cd unit`,
                 `touch ${filename}`
             ].join(` && `));
 
@@ -245,6 +253,7 @@ describe('common/utils', function () {
 
             execSync([
                 `cd test`,
+                `cd unit`,
                 `rm -f ${filename}`
             ].join(` && `));
         });

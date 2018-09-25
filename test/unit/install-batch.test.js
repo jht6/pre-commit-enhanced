@@ -1,12 +1,12 @@
 'use strict';
 
 const assume = require('assume');
-const Installer = require('../scripts/install-batch');
+const Installer = require('../../scripts/install-batch');
 
 const {
     BATCH_NAME,
     BATCH_SCRIPT
-} = require('../common/const')();
+} = require('../../common/const')();
 
 describe('install-batch', function () {
 

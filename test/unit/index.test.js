@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const assume = require('assume');
-const Hook = require('../index');
+const Hook = require('../../index');
 
 /* istanbul ignore next */
 describe('pre-commit', function () {
