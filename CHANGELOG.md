@@ -1,3 +1,6 @@
+## 1.2.0
+- Add support for batch. You can run command for only files to be commited.
+
 ## 1.1.3
 - Add regression testing in real environment.
 - Fix bugs.
