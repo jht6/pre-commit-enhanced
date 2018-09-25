@@ -59,7 +59,9 @@ cmd = cmd.replace('<paths>', pathList.join(' '));
 
 let isPassed = true;
 try {
-    execSync(cmd);
+    execSync(cmd, {
+        stdio: [0, 1, 2]
+    });
 } catch (e) {
     isPassed = false;
 }
