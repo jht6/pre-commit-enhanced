@@ -1,3 +1,7 @@
+## 1.2.1
+- Fix bug: In batch.js, set stdio when run command using "execSync".
+- Fix bug: In batch.js, run "filter" after transforming absolute paths to relative paths.
+
 ## 1.2.0
 - Add support for batch. You can run command for only files to be commited.
 
