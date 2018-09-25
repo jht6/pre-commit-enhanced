@@ -36,15 +36,6 @@ if (!pathList.length) {
 // For example: 'C:\\a\\b' -> '/C/a/b'.
 pathList = pathList.map(transPathWinToUnix);
 
-// Filter paths by "filter" callback function.
-if (typeof callbacks.filter === 'function') {
-    pathList = pathList.filter(callbacks.filter);
-}
-
-if (!pathList.length) {
-    log('There is no file path after filtering, skip hook.', 0);
-}
-
 // If useRelativePath() return true, transform absolute paths to relative paths.
 if (typeof callbacks.useRelativePath === 'function') {
     if (callbacks.useRelativePath()) {
@@ -54,9 +45,20 @@ if (typeof callbacks.useRelativePath === 'function') {
     }
 }
 
+// Filter paths by "filter" callback function.
+if (typeof callbacks.filter === 'function') {
+    pathList = pathList.filter(callbacks.filter);
+}
+
+if (!pathList.length) {
+    log('There is no file path after filtering, skip hook.', 0);
+}
+
+// Get command and replace param.
 let cmd = callbacks.command();
 cmd = cmd.replace('<paths>', pathList.join(' '));
 
+// Execute command.
 let isPassed = true;
 try {
     execSync(cmd, {
