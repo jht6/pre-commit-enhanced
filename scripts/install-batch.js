@@ -70,7 +70,7 @@ BatchInstaller.prototype.writeJsonToFile = function (json) {
         utils.log([
             `Success: Add "${BATCH_NAME}" in "scripts" of package.json`,
             `Success: Add "${BATCH_NAME}" in "pre-commit" of package.json`,
-            `    at ${this.packageJsonPath}`
+            `  at ${this.packageJsonPath}`
         ]);
     } catch (e) {
         utils.log([
@@ -84,6 +84,10 @@ BatchInstaller.prototype.writeJsonToFile = function (json) {
 
 BatchInstaller.prototype.copyBatchToPkgJsonDir = function () {
     execSync(`cp ./node_modules/pre-commit-enhanced/scripts/batch-callback.js ./pce-batch-callback.js`);
+    utils.log([
+        `Success: Create "pce-batch-callback.js" besize the package.json.`,
+        `  You should commit the "pce-batch-callback.js" file to your repository.`
+    ]);
 };
 
 // Expose the Hook instance so we can use it for testing purposes.
