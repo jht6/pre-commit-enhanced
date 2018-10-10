@@ -1,5 +1,48 @@
 TODO:
 
+2018.10.10
+
+1. batch模式不再需要执行npm run pce-install-batch后才能使用, 直接通过配置文件来声明
+2. 是开一个新的仓库, 还是从现有仓库升级大版本? 有待决定..
+3. 配置文件名: pce.config.js    内容如下:
+
+```
+module.exports = {
+    hooks: {
+        "pre-commit": {
+            tasks: [
+                "npm test", // 普通模式
+                {
+                    // 普通模式, 自定义了一些配置项
+                    mode: 'common',
+                    command: 'npm run coverage',
+                    cwd: __dirname
+                },
+                {
+                    // batch模式
+                    mode: 'batch',
+                    command: 'eslint <paths>',
+                    filter: item => /\.js$/.test(item),
+                    useRelativePath: true
+                }
+            ]
+        }
+    }
+}
+```
+
+每个task公共配置项有:
+mode: 'common' 或 'batch'
+command: 要执行的命令
+cwd: 执行命令时的当前工作目录 (此项是否要做支持? 待确定..)
+
+batch模式的task的配置项有:
+command中的<paths>是文件路径参数占位符
+filter: 过滤器函数, 或者'.eslintignore'之类的字符串来表示用该文件作为排除列表
+useRelativePath: <paths>参数中的路径是否用相对路径
+
+============================
+
 1. 增加对运行命令的计时功能, 输出内容包括: 各命令所用时间, 所有命令消耗的总时间 (index.js中已支持, foreach中尚未支持))
 2. 对所提交的文件路径集合进行处理的代码模板pce-batch.js, 提供可编程支持, 能够灵活处理所有场景
     一个使用eslint的完整场景为:
