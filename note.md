@@ -41,6 +41,8 @@ command中的<paths>是文件路径参数占位符
 filter: 过滤器函数, 或者'.eslintignore'之类的字符串来表示用该文件作为排除列表
 useRelativePath: <paths>参数中的路径是否用相对路径
 
+4. pce.config.js的hooks设计为一个对象, 为后续支持其他钩子(如pre-push)预留可扩展空间
+
 ============================
 
 1. 增加对运行命令的计时功能, 输出内容包括: 各命令所用时间, 所有命令消耗的总时间 (index.js中已支持, foreach中尚未支持))
